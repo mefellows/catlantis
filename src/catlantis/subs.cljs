@@ -17,11 +17,18 @@
   (fn [db _]
     (reaction
       (let [categs (:categories @db)]
-        (if (<= (count categs) 1)
-          (do (api/fetch! :categories cfg/default-catapi-params
-                          {:handler #(rf/dispatch [:categories-res %])})
-              nil)
-          categs)))))
+        ;        (if (<= (count categs) 1)
+        ;          (do (api/fetch! :categories cfg/default-catapi-params
+        ;                          {:handler #(rf/dispatch [:categories-res %])})
+        ;              nil)
+        ;          categs)))))
+        categs))))
+
+(register-sub
+  :current-page
+  (fn [db _]
+    (reaction
+      (:current-page @db))))
 
 (register-sub
   :category-selected

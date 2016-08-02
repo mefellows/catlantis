@@ -5,6 +5,10 @@
 (s/defschema Category {:id   (s/maybe s/Str)
                        :name s/Str})
 
+; Student database definition
+(s/defschema Student {:id   (s/maybe s/Str)
+                       :name s/Str})
+
 (def o s/optional-key)
 
 (s/defschema Image {:id             s/Str
@@ -30,11 +34,12 @@
              :favorites-query   ImagesQuery
              :image-selected    (s/maybe Image)
              :random-fact       s/Str
-             :user              (s/maybe User)})
+             :user              (s/maybe User)
+             :current-page      s/Keyword})
 
 (def app-db
   {:categories        [{:id nil :name "All Categories"}]
-   :category-selected nil
+   :category-selected {:id "1" :name "All"}
    :images-query      {:images   nil
                        :per-page per-page
                        :loading? false
@@ -43,4 +48,5 @@
                        :loading? false}
    :image-selected    nil
    :random-fact       ""
-   :user              {:username ""}})
+   :user              {:username "test"}
+   :current-page      :home})

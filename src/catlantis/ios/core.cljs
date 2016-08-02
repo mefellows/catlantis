@@ -17,21 +17,24 @@
 (def nav-content-color (ui/color :deep-purple900))
 
 (defn init-nav []
-  (nav/register-screen! home)
-  (nav/register-screen! detail)
-  (nav/register-screen! favorites)
-  (nav/register-screen! user)
-  (nav/register-reagent-component! :categories categories)
-  (nav/start-single-screen-app!
-    {:screen          :user
-     :drawer          {:left                 {:screen :categories}
-                       :disable-open-gesture true}
-     :persist-state?  true
-     :animationType   :fade
-     :navigator-style {:nav-bar-blur         true
-                       :draw-under-nav-bar   true
-                       :nav-bar-button-color nav-content-color
-                       :nav-bar-text-color   nav-content-color}}))
+  (let [page (rf/subscribe [:current-page])
+        u (rf/subscribe [:user])
+        username (:username @u)]
+    (nav/register-screen! home)
+    (nav/register-screen! detail)
+    (nav/register-screen! favorites)
+    (nav/register-screen! user)
+    (nav/register-reagent-component! :categories categories)
+    (nav/start-single-screen-app!
+      {:screen          (if (not= username "") @page :user)
+       :drawer          {:left                 {:screen :categories}
+                         :disable-open-gesture true}
+       :persist-state?  true
+       :animationType   :fade
+       :navigator-style {:nav-bar-blur         true
+                         :draw-under-nav-bar   true
+                         :nav-bar-button-color nav-content-color
+                         :nav-bar-text-color   nav-content-color}})))
 
 (defn init []
   (rf/dispatch-sync [:initialize-db])

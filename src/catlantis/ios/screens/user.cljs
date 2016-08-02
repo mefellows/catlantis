@@ -49,12 +49,24 @@
                  :auto-correct                     false
                  :on-submit-editing                sbmt
                  :auto-capitalize                  :none}]
+               [ui/text-input
+                {:style                            (:input styles)
+                 :blur-on-submit                   true
+                 :on-change-text                   #(r/set-state this {:password (str/trim %)})
+                 :keyboardType                     "email-address"
+                 :secure-text-entry                true
+                 :default-value                    ""
+                 :placeholder                      "Password"
+                 :enables-return-key-automatically true
+                 :auto-correct                     false
+                 :on-submit-editing                sbmt
+                 :auto-capitalize                  :none}]
                [ui/button {:on-press    sbmt
                            :style       (:submit-btn styles)
                            :text-style  (:submit-btn-text styles)
                            :is-disabled (invalid-username? username)}
                 "Submit"]
-               [ui/keyboard-spacer {:animation-config (ui/anim-preset :spring)}]]]])))})
+               ]]])))})
    :config
    {:screen          :user
     :screen-type     :screen
