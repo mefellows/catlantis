@@ -23,34 +23,24 @@
    (r/create-class
      {:reagent-render
       (fn []
-        (let [detail (rf/subscribe [:detail])
-              {:keys [image-selected random-fact]} @detail
-              {:keys [url source-url id favorite?] :as image} image-selected]
           [ui/scroll-view
            {:style (:container styles)}
            [ui/view
             {:style (:buttons-wrap styles)}
-            [btn-icon close-icon #(rf/dispatch [:nav/pop]) :white]
-            [btn-icon (if favorite? star-icon-full star-icon)
-             #(rf/dispatch [:image-favorite image favorite?]) :yellow700]]
-           [ui/scroll-view
-            {:maximum-zoom-scale 2.5}
-            [ui/touchable-opacity
-             {:on-press #(rf/dispatch [:nav/pop])}
-             [ui/image-progress
-              {:source      {:uri url}
-               :resize-mode :contain
-               :style       (:image-detail styles)}]]]
-           [ui/view
-            {:style (:text-wrap styles)}
             [ui/text
              {:style (:image-text styles)}
-             random-fact]
+             "some text!"]]
+           [ui/view
+            {:style (:buttons-wrap styles)}
             [ui/text
-             {:on-press #(ui/open-url source-url)
-              :style    (:source-link styles)}
-             "Image Source"]]
-           ]))})
+             {:style (:image-text styles)}
+             "some text!"]]
+           [ui/view
+            {:style (:buttons-wrap styles)}
+            [ui/text
+             {:style (:image-text styles)}
+             "some text!"]]
+           ])})
    :config
    {:screen            :detail
     :screen-type       :light-box
@@ -84,6 +74,6 @@
                     :height     20
                     :font-size  12}
      :image-text   {:text-align :center
-                    :color      (ui/color :white)
+                    :color      (ui/color :dark-black)
                     :width      "90%"
                     :height     "15%"}}))

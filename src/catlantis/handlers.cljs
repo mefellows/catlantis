@@ -11,6 +11,8 @@
     [catlantis.api :as api]
     [re-frame.core :as rf]))
 
+(enable-console-print!)
+
 (defn check-and-throw
   "throw an exception if db doesn't match the schema."
   [a-schema db]
@@ -154,3 +156,16 @@
   basic-mw
   (s/fn [db [user]]
     (assoc db :user user)))
+
+; New Handlers
+
+(register-handler
+  :bad-response
+  (s/fn [db [_ _]])
+  (print "error"))
+
+(register-handler
+  :process-students-res
+  (s/fn [db [_ _]])
+  (print "error"))
+

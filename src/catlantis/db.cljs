@@ -5,6 +5,10 @@
 (s/defschema Category {:id   (s/maybe s/Str)
                        :name s/Str})
 
+; Teacher database definition
+(s/defschema Teacher {:id   (s/maybe s/Str)
+                       :name s/Str})
+
 ; Student database definition
 (s/defschema Student {:id   (s/maybe s/Str)
                        :name s/Str})
@@ -35,6 +39,8 @@
              :image-selected    (s/maybe Image)
              :random-fact       s/Str
              :user              (s/maybe User)
+             :students          [Student]
+             :teachers          [Teacher]
              :current-page      s/Keyword})
 
 (def app-db
@@ -48,5 +54,7 @@
                        :loading? false}
    :image-selected    nil
    :random-fact       ""
+   :teachers          []
+   :students          []
    :user              {:username "test"}
    :current-page      :home})
