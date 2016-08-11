@@ -9,8 +9,6 @@
 
 (declare styles)
 
-(rf/dispatch [:load-students])
-
 (def star-icon (js/require "./images/star.png"))
 (def close-icon (js/require "./images/close.png"))
 

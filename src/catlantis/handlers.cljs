@@ -48,6 +48,12 @@
   basic-mw
   (fn [db [value]]
     (assoc db :greeting value)))
+    
+(register-handler
+  :set-students
+  basic-mw
+  (fn [db [value]]
+    (assoc db :students value)))
 
 (register-handler
   :nav/push
@@ -106,44 +112,8 @@
  (fn
    ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
-    (assoc db :students [{:ID "test" :FirstName "Reaction Maoeuatt"}, {:ID "test" :FirstName "Reation 111Matt"}, {:ID "test" :FirstName "3Foo"}])))
-  ;  (assoc db :students response)))
-  ; (js->clj response)
-
-(register-handler
-  :process-students-res2
-  standard-middlewares
-  (s/fn [db [_]]
-  (print "")
-  db))
-  ; THIS is the problem? Response is being pased in as DB??
-  ; check the other demo app example code for this!
-  ; (s/fn [db [_ [res]]]
-  ;     (assoc db :students [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}])))
-      ; (assoc db :students (clj->js res))))
-
-
-
-      ; (re-frame/register-handler
-      ;  :process-phones-bad-response
-      ;  (fn
-      ;    ;; log a bad response fetching the phones list
-      ;    [db [_ response]]
-      ;    db))
-      ;
-      ; (re-frame/register-handler
-      ;  :load-phones
-      ;  (fn
-      ;    ;; Fetch the list of phones and process the response
-      ;    [db _]
-      ;    (ajax/GET "phones/phones.json"
-      ;                   {:handler #(re-frame/dispatch [:process-phones-response %1])
-      ;                    :error-handler #(re-frame/dispatch [:process-phones-bad-response %1])
-      ;                    :response-format :json
-      ;                    :keywords? true})
-      ;    db))
-
-
+   (print response)
+   (assoc db :students response)))
 
 (register-handler
   :load-students
