@@ -10,8 +10,9 @@
                        :name s/Str})
 
 ; Student database definition
-(s/defschema Student {:id   (s/maybe s/Str)
-                       :name s/Str})
+(s/defschema Student s/Any)
+; (s/defschema Student {:id   (s/maybe s/Str)
+;                        :name s/Str})
 
 (def o s/optional-key)
 
@@ -39,7 +40,7 @@
              :image-selected    (s/maybe Image)
              :random-fact       s/Str
              :user              (s/maybe User)
-             :students          [Student]
+             :students          [s/Any]
              :teachers          [Teacher]
              :current-page      s/Keyword})
 
@@ -55,6 +56,6 @@
    :image-selected    nil
    :random-fact       ""
    :teachers          []
-   :students          []
+   :students          [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
    :user              {:username "test"}
    :current-page      :home})

@@ -4,7 +4,6 @@
             [catlantis.api :as api]
             [catlantis.config :as cfg]
             [re-frame.core :as rf]
-            [ajax.core :refer [GET]]
             [print.foo :as pf :include-macros true]))
 
 (register-sub
@@ -13,38 +12,18 @@
     (reaction
       (get @db :greeting))))
 
-; TODO: replace this with lookup to test API call?
-(register-sub
-  :categories2
-  (fn [db _]
-    (ajax.core/GET "http://localhost:8000/students")
-    {:handler #(rf/dispatch [:process-students-res %1])
-     :error-handler #(rf/dispatch-sync [:bad-response %1])}))
-
-
 (register-sub
   :categories
   (fn [db _]
     (reaction
       (let [categs (:categories @db)]
-        ;        (if (<= (count categs) 1)
-        ;          (do (api/fetch! :categories cfg/default-catapi-params
-        ;                          {:handler #(rf/dispatch [:categories-res %])})
-        ;              nil)
-        ;          categs)))))
-        foo))))
-
-(register-sub
-  :categories3
-  (fn [db _]
-    (reaction
-      (let [categs (:categories @db)]
-        ;        (if (<= (count categs) 1)
-        ;          (do (api/fetch! :categories cfg/default-catapi-params
-        ;                          {:handler #(rf/dispatch [:categories-res %])})
-        ;              nil)
-        ;          categs)))))
         categs))))
+
+(register-sub        ;; a new subscription handler
+ :students             ;; usage (subscribe [:students])
+ (fn [db]
+   ;; extracts the students property from the db
+   (reaction (:students @db))))  ;; pulls out :students
 
 (register-sub
   :current-page
@@ -77,10 +56,10 @@
       (let [{:keys [images loading?]} (:favorites-query @db)]
         [images loading?]))))
 
-(register-sub 
+(register-sub
   :detail
   (fn [db _]
-    (reaction 
+    (reaction
       ("some reaction"))))
 
 (register-sub

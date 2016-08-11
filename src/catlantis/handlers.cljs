@@ -6,12 +6,24 @@
     [catlantis.db :refer [app-db schema]]
     [catlantis.shared.navigation :as nav]
     [re-frame.middleware :as mid]
+    [ajax.core :refer [GET]]
     [catlantis.config :as cfg]
     [clojure.string :as str]
     [catlantis.api :as api]
     [re-frame.core :as rf]))
 
 (enable-console-print!)
+
+(defn log-ex
+  [handler]
+  (fn log-ex-handler
+    [db v]
+    (try
+        (handler db v)        ;; call the handler with a wrapping try
+        (catch :default e     ;; ooops
+          (do
+            (.error js/console e.stack)   ;; print a sane stacktrace
+            (throw e))))))
 
 (defn check-and-throw
   "throw an exception if db doesn't match the schema."
@@ -37,7 +49,6 @@
   (fn [db [value]]
     (assoc db :greeting value)))
 
-
 (register-handler
   :nav/push
   basic-mw
@@ -51,7 +62,6 @@
   (s/fn [db]
     (nav/pop-screen!)
     db))
-
 
 (register-handler
   :nav/toggle-drawer
@@ -67,7 +77,7 @@
     (update db :categories concat (map #(update % :name str/capitalize) (:categories res)))))
 
 (register-handler
-  :category-select
+  :menu-select
   basic-mw
   (s/fn [db [category]]
     (nav/set-title! (str/capitalize (:name category)))
@@ -88,6 +98,65 @@
   basic-mw
   (s/fn [db [loading?]]
     (assoc-in db [:images-query :loading?] loading?)))
+
+(def standard-middlewares  [basic-mw log-ex])
+
+(register-handler
+ :process-students-res
+ (fn
+   ;; store the response of fetching the phones list in the phones attribute of the db
+   [db [_ response]]
+    (assoc db :students [{:ID "test" :FirstName "Reaction Maoeuatt"}, {:ID "test" :FirstName "Reation 111Matt"}, {:ID "test" :FirstName "3Foo"}])))
+  ;  (assoc db :students response)))
+  ; (js->clj response)
+
+(register-handler
+  :process-students-res2
+  standard-middlewares
+  (s/fn [db [_]]
+  (print "")
+  db))
+  ; THIS is the problem? Response is being pased in as DB??
+  ; check the other demo app example code for this!
+  ; (s/fn [db [_ [res]]]
+  ;     (assoc db :students [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}])))
+      ; (assoc db :students (clj->js res))))
+
+
+
+      ; (re-frame/register-handler
+      ;  :process-phones-bad-response
+      ;  (fn
+      ;    ;; log a bad response fetching the phones list
+      ;    [db [_ response]]
+      ;    db))
+      ;
+      ; (re-frame/register-handler
+      ;  :load-phones
+      ;  (fn
+      ;    ;; Fetch the list of phones and process the response
+      ;    [db _]
+      ;    (ajax/GET "phones/phones.json"
+      ;                   {:handler #(re-frame/dispatch [:process-phones-response %1])
+      ;                    :error-handler #(re-frame/dispatch [:process-phones-bad-response %1])
+      ;                    :response-format :json
+      ;                    :keywords? true})
+      ;    db))
+
+
+
+(register-handler
+  :load-students
+  ; standard-middlewares
+  (s/fn [db _]
+    (ajax.core/GET "http://localhost:8000/students"
+    {
+     :response-format :json
+     :keywords? true
+     :handler #(rf/dispatch [:process-students-res %1])
+     :error-handler #(rf/dispatch-sync [:bad-response %1])
+    })
+  db)) ; <- DAH! Must return the state!!
 
 (register-handler
   :images-load
@@ -163,9 +232,3 @@
   :bad-response
   (s/fn [db [_ _]])
   (print "error"))
-
-(register-handler
-  :process-students-res
-  (s/fn [db [_ _]])
-  (print "error"))
-

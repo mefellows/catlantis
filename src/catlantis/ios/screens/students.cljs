@@ -1,62 +1,21 @@
-(ns catlantis.ios.screens.home
+(ns catlantis.ios.screens.students
   (:require [re-frame.core :as rf]
             [catlantis.shared.ui :as ui]
             [reagent.core :as r]
             [print.foo :as pf :include-macros true]
             [catlantis.config :refer [app-name]]
             [catlantis.config :as cfg]
-            [catlantis.ios.components.image-list :refer [image-list]]))
+            [catlantis.ios.components.students-list :refer [students-list]]))
 
 (declare styles)
+
+(rf/dispatch [:load-students])
 
 (def star-icon (js/require "./images/star.png"))
 (def close-icon (js/require "./images/close.png"))
 
 (defn on-end-reached [ctg]
   (rf/dispatch [:images-load ctg]))
-
-(def home
-  {:component
-   (r/create-class
-     {:reagent-render
-      (fn []
-          [ui/scroll-view
-           {:style (:container styles)}
-           [ui/view
-            {:style (merge-with (:text-wrap styles) (:first-item styles))}
-            [ui/text
-             {:style (:image-text styles)}
-             "first some text!"]]
-           [ui/view
-            {:style (:text-wrap styles)}
-            [ui/text
-             {:style (:image-text styles)}
-             "some text!"]]
-           [ui/view
-            {:style (:text-wrap styles)}
-            [ui/text
-             {:style (:image-text styles)}
-             "some last text!"]]
-           ])})
-   :config
-   {:screen            :home
-    :screen-type       :modal
-    :title             cfg/app-name
-    :navigator-buttons {:right-buttons
-                        [{:id   :favorites
-                          :icon star-icon}]
-                        :left-buttons
-                        [{:icon (js/require "./images/navicon_menu.png")
-                          :id   :menu}
-                         {:icon (js/require "./images/user.png")
-                          :id   :user}]}}
-    :on-navigator-event-fn
-    (fn [{:keys [id]}]
-      (let [id (keyword id)]
-        (case id
-          :menu (rf/dispatch [:nav/toggle-drawer])
-          :user (rf/dispatch [:nav/push id {:screen-type :modal}])
-          (rf/dispatch [:nav/push id]))))})
 
   (def styles
     (ui/create-stylesheet
@@ -87,3 +46,30 @@
                       :color      (ui/color :dark-black)
                       :width      "90%"
                       :height     "15%"}}))
+
+(def students
+  {:component
+   (r/create-class
+     {:reagent-render
+      (fn []
+        (let [students (rf/subscribe [:students])]
+          [students-list @students]))})
+   :config
+   {:screen            :students
+    :screen-type       :screen
+    :title             cfg/app-name
+    :navigator-buttons {:right-buttons
+                        [{:id   :favorites
+                          :icon star-icon}]
+                        :left-buttons
+                        [{:icon (js/require "./images/navicon_menu.png")
+                          :id   :menu}
+                         {:icon (js/require "./images/user.png")
+                          :id   :user}]}}
+   :on-navigator-event-fn
+   (fn [{:keys [id]}]
+     (let [id (keyword id)]
+       (case id
+         :menu (rf/dispatch [:nav/toggle-drawer])
+         :user (rf/dispatch [:nav/push id {:screen-type :modal}])
+         (rf/dispatch [:nav/push id]))))})

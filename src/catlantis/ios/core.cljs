@@ -7,6 +7,9 @@
             [catlantis.subs]
             [catlantis.shared.navigation :as nav]
             [catlantis.ios.screens.home :refer [home]]
+            [catlantis.ios.screens.teachers :refer [teachers]]
+            [catlantis.ios.screens.students :refer [students]]
+            [catlantis.ios.screens.incidents :refer [incidents]]
             [catlantis.ios.screens.detail :refer [detail]]
             [catlantis.ios.screens.categories :refer [categories]]
             [catlantis.ios.screens.favorites :refer [favorites]]
@@ -21,6 +24,9 @@
         u (rf/subscribe [:user])
         username (:username @u)]
     (nav/register-screen! home)
+    (nav/register-screen! teachers)
+    (nav/register-screen! students)
+    (nav/register-screen! incidents)
     (nav/register-screen! detail)
     (nav/register-screen! favorites)
     (nav/register-screen! user)
@@ -39,5 +45,3 @@
 (defn init []
   (rf/dispatch-sync [:initialize-db])
   (init-nav))
-
-

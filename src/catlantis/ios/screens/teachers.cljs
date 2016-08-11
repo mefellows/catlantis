@@ -1,4 +1,4 @@
-(ns catlantis.ios.screens.home
+(ns catlantis.ios.screens.teachers
   (:require [re-frame.core :as rf]
             [catlantis.shared.ui :as ui]
             [reagent.core :as r]
@@ -15,7 +15,7 @@
 (defn on-end-reached [ctg]
   (rf/dispatch [:images-load ctg]))
 
-(def home
+(def teachers
   {:component
    (r/create-class
      {:reagent-render
@@ -26,20 +26,20 @@
             {:style (merge-with (:text-wrap styles) (:first-item styles))}
             [ui/text
              {:style (:image-text styles)}
-             "first some text!"]]
+             "Teacher 1"]]
            [ui/view
             {:style (:text-wrap styles)}
             [ui/text
              {:style (:image-text styles)}
-             "some text!"]]
+             "Teacher 2"]]
            [ui/view
             {:style (:text-wrap styles)}
             [ui/text
              {:style (:image-text styles)}
-             "some last text!"]]
+             "Teacher 3"]]
            ])})
    :config
-   {:screen            :home
+   {:screen            :teachers
     :screen-type       :modal
     :title             cfg/app-name
     :navigator-buttons {:right-buttons
@@ -51,6 +51,7 @@
                          {:icon (js/require "./images/user.png")
                           :id   :user}]}}
     :on-navigator-event-fn
+;    :on-navigator-event-fn
     (fn [{:keys [id]}]
       (let [id (keyword id)]
         (case id

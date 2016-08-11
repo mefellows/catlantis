@@ -365,4 +365,3 @@
 
 (defn start-tab-based-app! [config]                         ; Not yet implemented
   (.startTabBasedApp Navigation (u/clj->camel->js config)))
-
