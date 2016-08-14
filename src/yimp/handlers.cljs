@@ -140,7 +140,7 @@
     (ui/alert "Synchronising in background")
     (print "dispatch sync!")
     (ajax.core/POST "http://localhost:8000/sync"
-    ; (ajax.core/GET "http://yimp.herokuapp.com/students"
+    ; (ajax.core/POST "http://yimp.herokuapp.com/sync"
      {
       :response-format :json
       :keywords? true

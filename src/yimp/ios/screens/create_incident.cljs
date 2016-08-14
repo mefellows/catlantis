@@ -19,10 +19,15 @@
       
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
-
-(print (t.struct (clj->js {:name t.String})))
 (def person 
-  (t.struct (clj->js {:name t.String})))
+  (t.struct (clj->js {:name t.String
+                      :surname (t.maybe t.String)
+                      :date (t.maybe t.String)
+                      :description (t.maybe t.String)
+                      :somethingelse (t.maybe t.String)
+                      :surname2 (t.maybe t.String)
+                      :age t.Number
+                      :rememberMe t.Boolean})))
   
 (def create-incident
   {:component
@@ -42,14 +47,16 @@
                    [ui/touchable-without-feedback
                     {:on-press #(ui/dismiss-keyboard)}
                     [ui/view {:style (:form-container styles)}
-                     [Form {:ref "form"
-                            :type person
-                            :options {}}]
-                     [ui/button {:on-press    sbmt
-                                 :style       (:submit-btn styles)
-                                 :text-style  (:submit-btn-text styles)
-                                 :is-disabled (invalid-username? username)}
-                      "Submit"]]])))})
+                     [ui/scroll-view
+                      {:style (:scroll-container styles)}                    
+                      [Form {:ref "form"
+                             :type person
+                             :options {}}]
+                      [ui/button {:on-press    sbmt
+                                  :style       (:submit-btn styles)
+                                  :text-style  (:submit-btn-text styles)
+                                  :is-disabled (invalid-username? username)}
+                       "Submit"]]]])))})
           
                 
    :config

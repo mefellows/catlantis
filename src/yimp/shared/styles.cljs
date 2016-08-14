@@ -16,7 +16,10 @@
                       :font-weight    "500"}
      :container     {:flex             1
                      :background-color :transparent
-                     :flex-direction   :row}
+                     :flex-direction   :row
+                     :height 500}
+     :scroll-container {:flex 8}
+     :footer-container {:flex 2}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
      :first-item   {:margin-top 100}
      :image-detail {:flex       1
@@ -47,9 +50,11 @@
      :bg-img       {:flex   1
                     :width  "100%"
                     :height "100%"}
-     :form-container {:margin 40
-                      ; :flex 1
-                      :height 300
+     :form-container {:margin 20
+                      :padding 20
+                      :margin-top 50
+                      ; :height 300
+                      :flex 1
                       :justify-content :center}
      :login-container    {:background-color :transparent
                           :flex             1
