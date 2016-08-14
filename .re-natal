@@ -16,7 +16,8 @@
     "react-native-image-progress",
     "react-native-keyboard-spacer",
     "apsl-react-native-button",
-    "dismissKeyboard"
+    "dismissKeyboard",
+    "tcomb-form-native"
   ],
   "imageDirs": [
     "images"

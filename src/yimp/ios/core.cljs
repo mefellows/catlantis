@@ -11,13 +11,13 @@
             [yimp.ios.screens.students :refer [students]]
             [yimp.ios.screens.incidents :refer [incidents]]
             [yimp.ios.screens.detail :refer [detail]]
-            [yimp.ios.screens.categories :refer [categories]]
+            [yimp.ios.screens.menu :refer [menu]]
             [yimp.ios.screens.create-incident :refer [create-incident]]
             [yimp.ios.screens.user :refer [user]]
             [yimp.shared.ui :as ui]))
 
 (s/set-fn-validation! goog.DEBUG)
-(def nav-content-color (ui/color :grey900))
+(def nav-content-color (ui/color :orange800))
 
 (defn init-nav []
   (let [page (rf/subscribe [:current-page])
@@ -30,17 +30,17 @@
     (nav/register-screen! detail)
     (nav/register-screen! create-incident)
     (nav/register-screen! user)
-    (nav/register-reagent-component! :categories categories)
+    (nav/register-reagent-component! :menu menu)
     (nav/start-single-screen-app!
       {:screen          (if (not= username "") @page :user)
-       :drawer          {:left                 {:screen :categories}
+       :drawer          {:left                 {:screen :menu}
                          :disable-open-gesture true}
        :persist-state?  true
        :animationType   :fade
        :navigator-style {:nav-bar-blur         true
                          :draw-under-nav-bar   true
                          :nav-bar-button-color nav-content-color
-                         :nav-bar-background-color "#efefef"
+                        ;  :nav-bar-background-color "#efefef"
                          :nav-bar-text-color   nav-content-color}})))
 
 (defn init []

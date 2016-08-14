@@ -64,8 +64,8 @@
                            :style       (:submit-btn styles)
                            :text-style  (:submit-btn-text styles)
                            :is-disabled (invalid-username? username)}
-                "Submit"]
-               ]]])))})
+                "Submit"]]]])))})
+               
    :config
    {:screen          :user
     :screen-type     :screen

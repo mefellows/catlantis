@@ -5,9 +5,18 @@
 
 (def styles
   (ui/create-stylesheet
-    {:container    {:flex             1
-                    :background-color :transparent
-                    :flex-direction   :row}
+    {:menu-container {:flex        0
+                      :padding-top 40}
+     :list-item      {:flex 0}
+     :list-item-text {:text-align :center
+                      :color (ui/color :black)}
+     :title          {:text-align     :center
+                      :padding-bottom 20
+                      :font-size      20
+                      :font-weight    "500"}
+     :container     {:flex             1
+                     :background-color :transparent
+                     :flex-direction   :row}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
      :first-item   {:margin-top 100}
      :image-detail {:flex       1
@@ -38,18 +47,26 @@
      :bg-img       {:flex   1
                     :width  "100%"
                     :height "100%"}
+     :form-container {:margin 40
+                      ; :flex 1
+                      :height 300
+                      :justify-content :center}
      :login-container    {:background-color :transparent
-                    :flex             1
-                    :height           300
-                    :justifyContent   :center}
+                          :flex             1
+                          :height           300
+                          :justifyContent   :center}
+     :label-text   {:color (ui/color :grey400) 
+                    :text-align "left" 
+                    :font-weight "normal"
+                    :width       "75%"}
      :input        {:height           50
                     :background-color (ui/color :white)
                     :width            "75%"
                     :margin-bottom    5
                     :border-radius    6
                     :align-self       :center
-                    :opacity          0.75
-                    }
+                    :opacity          0.75}
+                    
      :submit-btn   {:background-color (ui/color :cyan300)
                     :border-width     0
                     :width            "75%"

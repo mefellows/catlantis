@@ -45,11 +45,11 @@
   ([api-route :- s/Keyword
     query-params :- QueryParams
     opts]
-    (let [url (b/path-for api-routes api-route)
-          handler (get opts :handler identity)]
-      (GET url (merge default-opts
-                      opts
-                      {:params (m/map-keys cs/->snake_case query-params)}
-                      {:handler (comp handler (if-not (:response-format opts)
-                                                parse-xml-response
-                                                identity))})))))
+   (let [url (b/path-for api-routes api-route)
+         handler (get opts :handler identity)]
+     (GET url (merge default-opts
+                     opts
+                     {:params (m/map-keys cs/->snake_case query-params)}
+                     {:handler (comp handler (if-not (:response-format opts)
+                                               parse-xml-response
+                                               identity))})))))

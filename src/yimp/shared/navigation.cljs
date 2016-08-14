@@ -111,15 +111,15 @@
 
 (s/defn merge-with-default-cfg
   ([config :- NavScreenConfig]
-    (merge-with-default-cfg (:screen config) config))
+   (merge-with-default-cfg (:screen config) config))
   ([screen-name :- s/Keyword
     config :- NavScreenConfigNoName]
-    (let [nav-style (apply merge
-                           (map :navigator-style
-                                [@*nav-state* (registered-cfg screen-name) config]))]
-      (merge (registered-cfg screen-name)
-             config
-             {:navigator-style nav-style}))))
+   (let [nav-style (apply merge
+                          (map :navigator-style
+                               [@*nav-state* (registered-cfg screen-name) config]))]
+     (merge (registered-cfg screen-name)
+            config
+            {:navigator-style nav-style}))))
 
 
 (declare render-queued-drawers!)
@@ -189,16 +189,16 @@
 
 (s/defn action!
   ([action-name]
-    (action! action-name nil {}))
+   (action! action-name nil {}))
   ([action-name screen-name]
-    (action! action-name screen-name {}))
+   (action! action-name screen-name {}))
   ([action-name :- s/Keyword
     screen-name :- (s/maybe s/Keyword)
     config :- (s/maybe (s/cond-pre NavScreenConfigNoName Drawer))]
-    (let [config (merge {:screen screen-name} config)
-          navigator (get-top-navigator (:rendered @*nav-state*))
-          f! (aget navigator (cs/->camelCaseString action-name))]
-      (.apply f! navigator (clj->js [(u/walk-camelize-keys (u/ensure-map config))])))))
+   (let [config (merge {:screen screen-name} config)
+         navigator (get-top-navigator (:rendered @*nav-state*))
+         f! (aget navigator (cs/->camelCaseString action-name))]
+     (.apply f! navigator (clj->js [(u/walk-camelize-keys (u/ensure-map config))])))))
 
 (s/defn nav-stack-empty? [nav-state :- NavState]
   (not (seq (:nav-stack nav-state))))
@@ -243,12 +243,12 @@
 (s/defn toggle-drawer!
   ([] (toggle-drawer! {}))
   ([config :- (s/maybe Drawer)]
-    (let [drawers (:drawers (:rendered @*nav-state*))
-          side (get config :side (ffirst drawers))
-          to (get config :to (u/opposite (:to (side drawers)) :open :closed))
-          config (assoc (u/ensure-map config) :to to :side side)]
-      (action! :toggle-drawer nil config)
-      (swap! *nav-state* assoc-in [:rendered :drawers (:side config)] config))))
+   (let [drawers (:drawers (:rendered @*nav-state*))
+         side (get config :side (ffirst drawers))
+         to (get config :to (u/opposite (:to (side drawers)) :open :closed))
+         config (assoc (u/ensure-map config) :to to :side side)]
+     (action! :toggle-drawer nil config)
+     (swap! *nav-state* assoc-in [:rendered :drawers (:side config)] config))))
 
 (defn toggle-tabs! [screen-name config]
   (action! :toggle-tabs screen-name config))
@@ -295,7 +295,7 @@
 
 (s/defn screen-name->action-name :- s/Keyword
   ([config :- NavScreenConfig add?]
-    (screen-type->action (:screen-type config) add?)))
+   (screen-type->action (:screen-type config) add?)))
 
 (s/defn push-screen!
   ([screen-name] (push-screen! screen-name {}))
@@ -303,28 +303,28 @@
   ([screen-name :- s/Keyword
     config :- (s/maybe NavScreenConfigNoName)
     no-anim? :- s/Bool]
-    (let [config (merge-with-default-cfg screen-name (u/ensure-map config))
-          action-name (screen-name->action-name config true)]
-      (u/timeout-if
-        (and (= action-name :show-light-box)                ; Lightbox won't show when we dismiss and show
-             (has-render-queue? @*nav-state*))              ; instantly
-        #(action!
-          action-name
-          (:screen config)
-          (-> (u/apply-if no-anim? with-no-anim config)
-              (assoc :pass-props {:config config}))) 500))))
+   (let [config (merge-with-default-cfg screen-name (u/ensure-map config))
+         action-name (screen-name->action-name config true)]
+     (u/timeout-if
+       (and (= action-name :show-light-box)                ; Lightbox won't show when we dismiss and show
+            (has-render-queue? @*nav-state*))              ; instantly
+       #(action!
+         action-name
+         (:screen config)
+         (-> (u/apply-if no-anim? with-no-anim config)
+             (assoc :pass-props {:config config}))) 500))))
 
 (s/defn pop-screen!
   ([] (pop-screen! {} false))
   ([no-anim?] (pop-screen! {} no-anim?))
   ([config :- NavScreenConfigNoName no-anim?]
-    (let [config (merge (get-top-screen-cfg (:rendered @*nav-state*))
-                        config)]
-      (action!
-        (screen-name->action-name config false)
-        (:screen config)
-        (u/apply-if no-anim? with-no-anim config))
-      (pop-nav-stack!))))
+   (let [config (merge (get-top-screen-cfg (:rendered @*nav-state*))
+                       config)]
+     (action!
+       (screen-name->action-name config false)
+       (:screen config)
+       (u/apply-if no-anim? with-no-anim config))
+     (pop-nav-stack!))))
 
 (s/defn ^:private render-queued-drawers!
   [nav-state-atom :- NavStateAtom]

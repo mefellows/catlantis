@@ -6,7 +6,7 @@
             [yimp.ios.components.students-list :refer [students-list]]))
 
 (def students
-  (ui/create-screen :students
+  (ui/create-screen :students "Students"
     (fn []
       (let [students (rf/subscribe [:students])]
         [students-list @students]))))

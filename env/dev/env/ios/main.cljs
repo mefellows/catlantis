@@ -3,6 +3,8 @@
             [yimp.ios.core :as core]
             [figwheel.client :as figwheel :include-macros true]
             [yimp.utils :as u]
+            [yimp.handlers]
+            [yimp.subs]            
             [yimp.ios.screens.home :as home]))
 
 (enable-console-print!)

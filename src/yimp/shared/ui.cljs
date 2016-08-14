@@ -7,7 +7,7 @@
             [medley.core :as m]
             [yimp.utils :as u]
             [yimp.colors :refer [colors]]
-            [yimp.config :as cfg]
+            [yimp.config :as cfg]            
             [camel-snake-kebab.core :as cs :include-macros true]))
 
 (set! js/window.React (js/require "react-native"))
@@ -63,41 +63,41 @@
        clj->js)))
 
 (def color colors)
-
-
 (def add-icon (js/require "./images/ic_add.png"))
 (def sync-icon (js/require "./images/ic_cached.png"))
 (def close-icon (js/require "./images/ic_close.png"))
 (def menu-icon (js/require "./images/ic_menu.png"))
 
-(defn navigator [screen]
-  {:screen          screen
-   :screen-type       :screen
-   :title             cfg/app-name
-   :navigator-buttons {:right-buttons
-                       [{:id   :create-incident
-                         :icon add-icon}]
-                       :left-buttons
-                       [{:icon menu-icon
-                         :id   :menu}
-                        {:id   :sync
-                         :icon sync-icon}]}
-})
+(def navigator-buttons 
+  {:right-buttons
+   [{:id   :create-incident
+     :icon add-icon}]
+   :left-buttons
+   [{:icon menu-icon
+     :id   :menu}
+    {:id   :sync
+     :icon sync-icon}]})
 
 (defn navigator-events [{:keys [id]}]
-    (let [id (keyword id)]
-      (case id
-        :menu (rf/dispatch [:nav/toggle-drawer])
-        :sync (rf/dispatch [:synchronise])
-        :user (rf/dispatch [:nav/push id {:screen-type :modal}])
-        (rf/dispatch [:nav/push id]))))
+  (let [id   (keyword id)]
+    (case id
+      :menu (rf/dispatch [:nav/toggle-drawer])
+      :sync (rf/dispatch [:synchronise])
+      :user (rf/dispatch [:nav/push id {:screen-type :modal}])
+      (rf/dispatch [:nav/push id]))))
     
-(defn create-screen [screen render-fn]
+(defn navigator [screen title]
+  {:screen            screen
+   :screen-type       :screen
+   :title             title
+   :navigator-buttons navigator-buttons})
+                  
+(defn create-screen [screen title render-fn]
   {:component
    (r/create-class
      {:reagent-render
       render-fn})
    :config 
-     (navigator screen)
+   (navigator screen title)
    :on-navigator-event-fn
-    navigator-events})    
+   navigator-events})

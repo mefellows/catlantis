@@ -5,23 +5,23 @@
             [print.foo :as pf :include-macros true]))
 
 (def detail
-  (ui/create-screen :detail
+  (ui/create-screen :detail "Incident Detail"
     (fn []
-        [ui/scroll-view
-         {:style (:container styles)}
-         [ui/view
-          {:style (:buttons-wrap styles)}
-          [ui/text
-           {:style (:image-text styles)}
-           "some text!"]]
-         [ui/view
-          {:style (:buttons-wrap styles)}
-          [ui/text
-           {:style (:image-text styles)}
-           "some text!"]]
-         [ui/view
-          {:style (:buttons-wrap styles)}
-          [ui/text
-           {:style (:image-text styles)}
-           "some text!"]]
-         ])))
+      [ui/scroll-view
+       {:style (:container styles)}
+       [ui/view
+        {:style (:buttons-wrap styles)}
+        [ui/text
+         {:style (:image-text styles)}
+         "some text!"]]
+       [ui/view
+        {:style (:buttons-wrap styles)}
+        [ui/text
+         {:style (:image-text styles)}
+         "some text!"]]
+       [ui/view
+        {:style (:buttons-wrap styles)}
+        [ui/text
+         {:style (:image-text styles)}
+         "some text!"]]])))
+         

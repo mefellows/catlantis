@@ -5,7 +5,7 @@
             [print.foo :as pf :include-macros true]))
             
 (def teachers
-  (ui/create-screen :teachers
+  (ui/create-screen :teachers "Teachers"
     (fn []
         [ui/scroll-view
          {:style (:container styles)}
