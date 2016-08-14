@@ -1,9 +1,9 @@
 (ns ^:figwheel-no-load env.ios.main
   (:require [reagent.core :as r]
-            [catlantis.ios.core :as core]
+            [yimp.ios.core :as core]
             [figwheel.client :as figwheel :include-macros true]
-            [catlantis.utils :as u]
-            [catlantis.ios.screens.home :as home]))
+            [yimp.utils :as u]
+            [yimp.ios.screens.home :as home]))
 
 (enable-console-print!)
 (aset js/console "disableYellowBox" true)

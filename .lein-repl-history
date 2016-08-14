@@ -1,5 +1,5 @@
 (start-figwheel "ios")
 (dispatch [:set-greeting "Hello Native World!"])
-(in-ns 'catlantis.ios.core)
+(in-ns 'yimp.ios.core)
 (dispatch [:set-greeting "Hello Native World!"])
 (rf/dispatch [:set-greeting "Hello Native World!"])

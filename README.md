@@ -1,17 +1,4 @@
-# Catlantis
-
-A simple [React-Native](https://facebook.github.io/react-native/) IOS app (about Cats!) written in [Clojurescript](https://github.com/clojure/clojurescript) using [re-natal](https://github.com/drapanjanas/re-natal) template.
-
-Notable libraries used:
-* [react-native-navigation](https://github.com/wix/react-native-navigation)
-* [re-frame](https://github.com/Day8/re-frame)
-* [react-native-extended-stylesheet](https://github.com/vitalets/react-native-extended-stylesheet)
-
-APIs used:
-* [The Cat API](http://thecatapi.com/)
-* [Cat Facts API](http://catfacts-api.appspot.com/)
-
-![gif demo](https://cloud.githubusercontent.com/assets/3857155/15516250/4f593634-21f2-11e6-84f2-c733b77cca32.gif)
+# Yard Incident Management Portal (YIMP)
 
 ## How to run
 ```
@@ -21,19 +8,33 @@ $ lein prod-build
 Then run in iOS from xcode or `react-native run-ios`
 
 ## How to develop
-Catlantis is based on re-natal 0.2.34+.
+YIMP is based on re-natal 0.2.34+.
+
 ```
-$ re-natal use-figwheel
-$ lein figwheel ios
-```
-or nREPL
-```
-$ lein repl
-user=> (start-ios-fig)
-```
-and finally
-```
-$ react-native run-ios
+re-natal use-figwheel
+lein figwheel ios
+react-native run-ios
 ```
 
 Please, refer to [re-natal documentation](https://github.com/drapanjanas/re-natal/blob/master/README.md) for more information.
+
+## Building a release package
+
+```
+lein prod-build
+```
+
+Edit AppDelegate.m and comment out the live reload:
+
+```
+//jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+ jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+
+```
+
+## Adding an image
+
+Copy image to `./images`. Be sure to add 2x and 3x versions (note the `@2x.png` and `@3x.png` suffixes). 
+1. Restart React Package Manager
+2. Run `re-natil use-figwheel` to update deps
+3. `lein figwheel ios` to keep developing

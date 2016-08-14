@@ -1,5 +1,5 @@
 (ns env.ios.main
-  (:require [catlantis.ios.core :as core]))
+  (:require [yimp.ios.core :as core]))
 
 (enable-console-print!)
 (aset js/console "disableYellowBox" true)

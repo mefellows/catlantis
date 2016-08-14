@@ -1,6 +1,6 @@
-(ns catlantis.core-test
+(ns yimp.core-test
   (:require [clojure.test :refer :all]
-            [catlantis.core :refer :all]))
+            [yimp.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

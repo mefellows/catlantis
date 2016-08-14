@@ -1,4 +1,4 @@
-(defproject catlantis "0.1.0-SNAPSHOT"
+(defproject yimp "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "ReactNative & Clojurescript App about Cats!"
   :license {:name "Eclipse Public License"

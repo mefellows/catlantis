@@ -1,4 +1,4 @@
-rootProject.name = 'catlantis'
+rootProject.name = 'yimp'
 
 include ':app'
 include ':react-native-vector-icons'
