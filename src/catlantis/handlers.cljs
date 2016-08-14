@@ -119,7 +119,8 @@
   :load-students
   ; standard-middlewares
   (s/fn [db _]
-    (ajax.core/GET "http://localhost:8000/students"
+    ; (ajax.core/GET "http://localhost:8000/students"
+    (ajax.core/GET "http://yimp.herokuapp.com/students"
     {
      :response-format :json
      :keywords? true
@@ -169,26 +170,26 @@
               #(conj % image))]
       (-> db
           (assoc-in [:image-selected :favorite?] (not unfavorite?))
-          (update-in [:favorites-query :images] f)))))
+          (update-in [:incident-query :images] f)))))
 
 (register-handler
-  :favorites-load
+  :incident-load
   basic-mw
   (s/fn [db]
     (let [query-params (cond-> (merge cfg/default-catapi-params
                                       {:sub-id (get-in db [:user :username])}))]
       (api/fetch! :favorites query-params
-                  {:handler #(rf/dispatch [:favorites-res (-> % :images)])})
-      (assoc-in db [:favorites-query :loading?] true))))
+                  {:handler #(rf/dispatch [:incident-res (-> % :images)])})
+      (assoc-in db [:incident-query :loading?] true))))
 
 (register-handler
-  :favorites-res
+  :incident-res
   basic-mw
   (s/fn [db [images]]
     (let [images (if (map? images) [(:image images)] images)]
       (-> db
-          (assoc-in [:favorites-query :images] images)
-          (assoc-in [:favorites-query :loading?] false)))))
+          (assoc-in [:incident-query :images] images)
+          (assoc-in [:incident-query :loading?] false)))))
 
 (register-handler
   :user-change
@@ -197,6 +198,12 @@
     (assoc db :user user)))
 
 ; New Handlers
+(register-handler
+  :synchronise
+  basic-mw
+  (s/fn [db [_]]
+    (print "dispatch sync!")
+    db))
 
 (register-handler
   :bad-response

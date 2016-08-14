@@ -1,11 +1,10 @@
 (ns catlantis.ios.screens.user
   (:require [re-frame.core :as rf]
             [reagent.core :as r]
+            [catlantis.shared.styles :refer [styles]]
             [print.foo :as pf :include-macros true]
             [catlantis.shared.ui :as ui]
             [clojure.string :as str]))
-
-(declare styles)
 
 (def bg-img (js/require "./images/login_bg1.jpg"))
 
@@ -38,7 +37,7 @@
               :style  (:bg-img styles)}
              [ui/touchable-without-feedback
               {:on-press #(ui/dismiss-keyboard)}
-              [ui/view {:style (:container styles)}
+              [ui/view {:style (:login-container styles)}
                [ui/text-input
                 {:style                            (:input styles)
                  :blur-on-submit                   true
@@ -72,28 +71,3 @@
     :screen-type     :screen
     :title           "User"
     :navigator-style {:nav-bar-hidden true}}})
-
-
-(def styles
-  (ui/create-stylesheet
-    {:bg-img          {:flex   1
-                       :width  "100%"
-                       :height "100%"}
-     :container       {:background-color :transparent
-                       :flex             1
-                       :height           300
-                       :justifyContent   :center}
-     :input           {:height           50,
-                       :background-color (ui/color :white)
-                       :width            "75%"
-                       :margin-bottom    5
-                       :border-radius    6
-                       :align-self       :center
-                       :opacity          0.75
-                       }
-     :submit-btn      {:background-color (ui/color :cyan300)
-                       :border-width     0
-                       :width            "75%"
-                       :opacity          0.9
-                       :align-self       :center}
-     :submit-btn-text {:color (ui/color :white)}}))

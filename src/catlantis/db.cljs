@@ -36,7 +36,7 @@
              :images-query      (merge ImagesQuery
                                        {:category (s/maybe Category)
                                         :per-page s/Num})
-             :favorites-query   ImagesQuery
+             :incident-query   ImagesQuery
              :image-selected    (s/maybe Image)
              :random-fact       s/Str
              :user              (s/maybe User)
@@ -51,7 +51,7 @@
                        :per-page per-page
                        :loading? false
                        :category nil}
-   :favorites-query   {:images   nil
+   :incident-query   {:images   nil
                        :loading? false}
    :image-selected    nil
    :random-fact       ""

@@ -15,7 +15,6 @@
     "react-native-image-progress": "^0.4.0",
     "react-native-keyboard-spacer": "^0.2.0",
     "react-native-listitem": "^1.0.5",
-    "react-native-navigation": "^0.2.5",
     "stream": "0.0.2"
   }
 }

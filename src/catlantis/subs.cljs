@@ -50,29 +50,17 @@
               [nil loading?]))))))
 
 (register-sub
-  :favorites
+  :incident
   (fn [db _]
     (reaction
-      (let [{:keys [images loading?]} (:favorites-query @db)]
+      (let [{:keys [images loading?]} (:incidents-query @db)]
         [images loading?]))))
 
 (register-sub
   :detail
   (fn [db _]
     (reaction
-      ("some reaction"))))
-
-(register-sub
-  :detail2
-  (fn [db _]
-    (reaction
-      (let [{:keys [image-selected random-fact favorites-query]} @db]
-        {:image-selected
-         (assoc image-selected :favorite? (contains? (->> (:images favorites-query)
-                                                          (map :id)
-                                                          set) (:id image-selected)))
-         :random-fact
-         random-fact}))))
+      ('some reaction))))
 
 (register-sub
   :user

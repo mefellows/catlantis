@@ -12,12 +12,12 @@
             [catlantis.ios.screens.incidents :refer [incidents]]
             [catlantis.ios.screens.detail :refer [detail]]
             [catlantis.ios.screens.categories :refer [categories]]
-            [catlantis.ios.screens.favorites :refer [favorites]]
+            [catlantis.ios.screens.create-incident :refer [create-incident]]
             [catlantis.ios.screens.user :refer [user]]
             [catlantis.shared.ui :as ui]))
 
 (s/set-fn-validation! goog.DEBUG)
-(def nav-content-color (ui/color :deep-purple900))
+(def nav-content-color (ui/color :grey900))
 
 (defn init-nav []
   (let [page (rf/subscribe [:current-page])
@@ -28,7 +28,7 @@
     (nav/register-screen! students)
     (nav/register-screen! incidents)
     (nav/register-screen! detail)
-    (nav/register-screen! favorites)
+    (nav/register-screen! create-incident)
     (nav/register-screen! user)
     (nav/register-reagent-component! :categories categories)
     (nav/start-single-screen-app!
@@ -40,6 +40,7 @@
        :navigator-style {:nav-bar-blur         true
                          :draw-under-nav-bar   true
                          :nav-bar-button-color nav-content-color
+                         :nav-bar-background-color "#efefef"
                          :nav-bar-text-color   nav-content-color}})))
 
 (defn init []

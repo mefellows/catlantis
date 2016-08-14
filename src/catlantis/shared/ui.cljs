@@ -2,10 +2,12 @@
   (:require-macros [natal-shell.layout-animation :as la]
                    [natal-shell.dimensions :as dim])
   (:require [reagent.core :as r]
+            [re-frame.core :as rf]
             [print.foo :as pf :include-macros true]
             [medley.core :as m]
             [catlantis.utils :as u]
             [catlantis.colors :refer [colors]]
+            [catlantis.config :as cfg]
             [camel-snake-kebab.core :as cs :include-macros true]))
 
 (set! js/window.React (js/require "react-native"))
@@ -61,3 +63,41 @@
        clj->js)))
 
 (def color colors)
+
+
+(def add-icon (js/require "./images/ic_add.png"))
+(def sync-icon (js/require "./images/ic_cached.png"))
+(def close-icon (js/require "./images/ic_close.png"))
+(def menu-icon (js/require "./images/ic_menu.png"))
+
+(defn navigator [screen]
+  {:screen          screen
+   :screen-type       :screen
+   :title             cfg/app-name
+   :navigator-buttons {:right-buttons
+                       [{:id   :create-incident
+                         :icon add-icon}]
+                       :left-buttons
+                       [{:icon menu-icon
+                         :id   :menu}
+                        {:id   :sync
+                         :icon sync-icon}]}
+})
+
+(defn navigator-events [{:keys [id]}]
+    (let [id (keyword id)]
+      (case id
+        :menu (rf/dispatch [:nav/toggle-drawer])
+        :sync (rf/dispatch [:synchronise])
+        :user (rf/dispatch [:nav/push id {:screen-type :modal}])
+        (rf/dispatch [:nav/push id]))))
+    
+(defn create-screen [screen render-fn]
+  {:component
+   (r/create-class
+     {:reagent-render
+      render-fn})
+   :config 
+     (navigator screen)
+   :on-navigator-event-fn
+    navigator-events})    
