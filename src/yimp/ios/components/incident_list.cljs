@@ -16,7 +16,9 @@
   
 (defn render-incident-row [{:keys [Summary ID] :as incident}]
   [ui/touchable-highlight {:style       (:listview-row styles)
-              :on-press    #(submit ID)}
+                           :on-press    #(submit ID)
+                           :underlay-color "#efefef"
+                           :active-opacity .9}
     [ui/view {:style       (:listview-row styles)}
       [ui/view {:style (:listview-rowcontent styles)}
           [ui/text {}

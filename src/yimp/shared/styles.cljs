@@ -27,9 +27,14 @@
      :listview-row        {:flex 1
                            :flex-direction :row
                            :width      "100%"
-                           :height     "10%"}
+                           :height     "10%"
+                           :border-bottom-color "#efefef"
+                           :border-bottom-width 1}
      :listview-rowcontent {:flex 9
-                           :flex-direction :row}
+                           :flex-direction :row
+                           :align-items :center
+                           :padding-left 20
+}
      :listview-rowaction  {:flex 1
                            :flex-direction :row
                            :align-items :center}
@@ -42,6 +47,7 @@
      :listview-row-footer {:flex 1
                            :flex-direction :column
                            :align-items :center
+                           :padding 20
                            :width      "100%"
                            :height     "10%"}
 
@@ -49,12 +55,12 @@
      :container     {:flex             1
                      :background-color :transparent
                      :flex-direction   :row
-                     :height 500}
+                     :height 600}
      :scroll-container {:flex 8
                         :padding 20}
      :footer-container {:flex 2}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
-     :first-item   {:margin-top 100}
+     :first-item   {:margin-top 60}
      :image-detail {:flex       1
                     :height     "60%"
                     :width      "100%"
