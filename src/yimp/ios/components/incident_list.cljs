@@ -11,29 +11,38 @@
 
 (def list-view-ds (ds/data-source {:rowHasChanged #(not= %1 %2)}))
 
+(defn submit [id]
+  (print "selected: " id ))
+  
 (defn render-incident-row [{:keys [Summary ID] :as incident}]
-   [ui/view
-      {:style (:listview-row styles)}
-     [ui/view
-        {:style (:listview-rowcontent styles)}
-     [ui/text
-      {:style (:image-text styles)}
-      Summary]]
-      [ui/image {;:style  (get-in styles [:listview :item :button-forward])
-                 :style  (:button-forward styles)
-                 :source (js/require "./images/ic_chevron_right.png")}]])
+  [ui/touchable-highlight {:style       (:listview-row styles)
+              :on-press    #(submit ID)}
+    [ui/view {:style       (:listview-row styles)}
+      [ui/view {:style (:listview-rowcontent styles)}
+          [ui/text {}
+            Summary]]
+      [ui/view {:style (:listview-rowaction styles)}
+        [ui/text {} " > "]]]])
 
 (defn footer [loading?]
   (when loading?
     [ui/view
-     {:style (:listview-row styles)}
+     {:style (:listview-row-footer styles)}
      [ui/activity-indicator-ios
       {:style (:indicator styles)}]]))
+
+(def refresh-control
+  (r/as-element [ui/refresh-control {:refreshing #(true)
+                                     :on-refresh #(print "refreshing on refresh")
+                                     :title "Loading incidents..."}]))
 
 ; TODO: add touchable highlight and click-through
 (defn incident-list [incidents]
   [ui/scroll-view
-   {:style (:listview-container styles)}
+   {:style (:listview-container styles)
+    ;:refresh-control refresh-control}
+   }
+    
    [ui/list-view (merge
                    {:dataSource    (ds/clone-with-rows list-view-ds incidents)
                     :render-row    (comp r/as-element render-incident-row u/js->cljk)

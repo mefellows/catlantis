@@ -6,7 +6,8 @@
 (def styles
   (ui/create-stylesheet
     {:menu-container {:flex        0
-                      :padding-top 40}
+                      :padding-top 40
+                      :background-color "#ffffff"}
      :list-item      {:flex 0}
      :list-item-text {:text-align :center
                       :color (ui/color :black)}
@@ -16,25 +17,35 @@
                       :font-weight    "500"}
 
      ; List View elements
-     :button-forward {:color (ui/color :black)
-                                       :flex       1
-                                       :resizeMode "cover"}
-     :listview-row   {:flex 0
-                      :border-bottom-width 1
-                      :border-bottom-color "#efefef"
-                      :text-align :left
-                      :width      "100%"
-                      :padding    20
-                      :height     "10%"
-                     }
-     :listview-rowcontent     {:flex 8 }
-     :listview-container      {:flex             1
-                               :background-color :transparent
-                               :flex-direction   :row
-                               :border-top-width 1
-                               :border-top-color "#efefef"
-                               :height "90%"}
-     ;
+     :listview-container  {:flex             1
+                           ;  :background-color :transparent
+                           :background-color (ui/color :white)
+                           :flex-direction   :row
+                           :border-top-width 1
+                           :border-top-color "#efefef"
+                           :height "90%"}
+     :listview-row        {:flex 1
+                           :flex-direction :row
+                           :width      "100%"
+                           :height     "10%"}
+     :listview-rowcontent {:flex 9
+                           :flex-direction :row}
+     :listview-rowaction  {:flex 1
+                           :flex-direction :row
+                           :align-items :center}
+     :button-forward      {:color (ui/color :black)
+                           :flex       1
+                           :resizeMode "cover"}
+     :listview-btn        {:border-width     0
+                           :align-self       :center}                               
+     :listview-btn-text   {:color (ui/color :orange800)}
+     :listview-row-footer {:flex 1
+                           :flex-direction :column
+                           :align-items :center
+                           :width      "100%"
+                           :height     "10%"}
+
+     ; Other
      :container     {:flex             1
                      :background-color :transparent
                      :flex-direction   :row
@@ -73,13 +84,12 @@
                     :width  "100%"
                     :height "100%"}
      :form-container {:margin-top 50
-                      ; :height 300
                       :flex 1
                       :justify-content :center}
-     :login-container    {:background-color :transparent
-                          :flex             1
-                          :height           300
-                          :justifyContent   :center}
+     :login-container {:background-color :transparent
+                       :flex             1
+                       :height           300
+                       :justifyContent   :center}
      :label-text   {:color (ui/color :grey400)
                     :text-align "left"
                     :font-weight "normal"
@@ -97,4 +107,4 @@
                     :width            "75%"
                     :opacity          0.9
                     :align-self       :center}
-     :submit-btn-text {:color (ui/color :white)}}))
+:submit-btn-text {:color (ui/color :white)}}))

@@ -5,6 +5,6 @@
             [yimp.ios.components.incident-list :refer [incident-list]]))
 (def incidents
   (ui/create-screen :incidents "Incidents"
-    (fn []
+    (fn [props]
       (let [incidents (rf/subscribe [:incidents])]
         [incident-list @incidents]))))
