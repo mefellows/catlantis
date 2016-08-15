@@ -41,6 +41,7 @@
              :random-fact       s/Str
              :user              (s/maybe User)
              :students          [s/Any]
+             :incidents         [s/Any]
              :teachers          [Teacher]
              :sync              s/Bool
              :current-page      s/Keyword})
@@ -59,5 +60,6 @@
    :random-fact        ""
    :teachers           []
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
+   :incidents          []
    :user               {:username "test"}
-   :current-page       :home})
+   :current-page       :incidents})

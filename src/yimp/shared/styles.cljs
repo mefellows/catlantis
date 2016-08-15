@@ -14,11 +14,33 @@
                       :padding-bottom 20
                       :font-size      20
                       :font-weight    "500"}
+
+     ; List View elements
+     :button-forward {:color (ui/color :black)
+                                       :flex       1
+                                       :resizeMode "cover"}
+     :listview-row   {:flex 0
+                      :border-bottom-width 1
+                      :border-bottom-color "#efefef"
+                      :text-align :left
+                      :width      "100%"
+                      :padding    20
+                      :height     "10%"
+                     }
+     :listview-rowcontent     {:flex 8 }
+     :listview-container      {:flex             1
+                               :background-color :transparent
+                               :flex-direction   :row
+                               :border-top-width 1
+                               :border-top-color "#efefef"
+                               :height "90%"}
+     ;
      :container     {:flex             1
                      :background-color :transparent
                      :flex-direction   :row
                      :height 500}
-     :scroll-container {:flex 8}
+     :scroll-container {:flex 8
+                        :padding 20}
      :footer-container {:flex 2}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
      :first-item   {:margin-top 100}
@@ -40,7 +62,7 @@
                     :width      "90%"
                     :height     20
                     :font-size  12}
-     :image-text   {:text-align :center
+     :image-text   {:text-align :left
                     :color      (ui/color :dark-black)
                     :width      "90%"
                     :height     "15%"}
@@ -50,9 +72,7 @@
      :bg-img       {:flex   1
                     :width  "100%"
                     :height "100%"}
-     :form-container {:margin 20
-                      :padding 20
-                      :margin-top 50
+     :form-container {:margin-top 50
                       ; :height 300
                       :flex 1
                       :justify-content :center}
@@ -60,8 +80,8 @@
                           :flex             1
                           :height           300
                           :justifyContent   :center}
-     :label-text   {:color (ui/color :grey400) 
-                    :text-align "left" 
+     :label-text   {:color (ui/color :grey400)
+                    :text-align "left"
                     :font-weight "normal"
                     :width       "75%"}
      :input        {:height           50
@@ -71,7 +91,7 @@
                     :border-radius    6
                     :align-self       :center
                     :opacity          0.75}
-                    
+
      :submit-btn   {:background-color (ui/color :cyan300)
                     :border-width     0
                     :width            "75%"

@@ -12,6 +12,12 @@
    ;; extracts the students property from the db
    (reaction (:students @db))))  ;; pulls out :students
 
+(register-sub        ;; a new subscription handler
+ :incidents             ;; usage (subscribe [:incidents])
+ (fn [db]
+   ;; extracts the incidents property from the db
+   (reaction (:incidents @db))))  ;; pulls out :incidents
+
 (register-sub
   :current-page
   (fn [db _]

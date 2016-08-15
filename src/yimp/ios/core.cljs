@@ -46,4 +46,5 @@
 (defn init []
   (rf/dispatch-sync [:initialize-db])
   (init-nav)
-  (rf/dispatch [:load-students]))
+  (rf/dispatch [:load-students])
+  (rf/dispatch [:load-incidents]))

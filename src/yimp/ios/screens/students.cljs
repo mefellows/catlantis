@@ -3,10 +3,10 @@
             [yimp.shared.ui :as ui]
             [yimp.shared.styles :refer [styles]]
             [print.foo :as pf :include-macros true]
-            [yimp.ios.components.students-list :refer [students-list]]))
+            [yimp.ios.components.student-list :refer [student-list]]))
 
 (def students
   (ui/create-screen :students "Students"
     (fn []
       (let [students (rf/subscribe [:students])]
-        [students-list @students]))))
+        [student-list @students]))))

@@ -43,7 +43,7 @@
   basic-mw
   (fn [_]
     app-db))
-    
+
 (register-handler
   :set-students
   basic-mw
@@ -128,7 +128,7 @@
 (register-handler
   :sync-complete
   basic-mw
-  (s/fn [db [res]] 
+  (s/fn [db [res]]
     (print res)
     (assoc db :sync false)))
 
@@ -153,3 +153,23 @@
   :bad-response
   (s/fn [db [_ _]])
   (print "error"))
+
+  (register-handler
+   :process-incidents-res
+   (fn
+     ;; store the response of fetching the phones list in the phones attribute of the db
+     [db [_ response]]
+     (print response)
+     (assoc db :incidents response)))
+
+  (register-handler
+    :load-incidents
+    (s/fn [db _]
+      (ajax.core/GET "http://localhost:8000/incidents"
+      ; (ajax.core/GET "http://yimp.herokuapp.com/incidents"
+       {
+        :response-format :json
+        :keywords? true
+        :handler #(rf/dispatch [:process-incidents-res %1])
+        :error-handler #(rf/dispatch-sync [:bad-response %1])})
+     db)) ; <- DAH! Must return the state!!

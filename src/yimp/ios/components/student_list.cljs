@@ -1,4 +1,4 @@
-(ns yimp.ios.components.students-list
+(ns yimp.ios.components.student-list
   (:require-macros [natal-shell.data-source :as ds])
   (:require [yimp.shared.ui :as ui]
             [yimp.shared.styles :refer [styles]]
@@ -19,12 +19,12 @@
 
 (defn footer [loading?]
   (when loading?
-    [ui/view    
+    [ui/view
      {:style (:loading-wrap styles)}
      [ui/activity-indicator-ios
       {:style (:indicator styles)}]]))
 
-(defn students-list [students]
+(defn student-list [students]
   [ui/scroll-view
    {:style (:container styles)}
    [ui/list-view (merge
