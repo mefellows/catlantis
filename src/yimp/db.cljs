@@ -25,23 +25,17 @@
 
 (s/defschema User {:username s/Str})
 
-(s/defschema ImagesQuery
-  {:images   (s/maybe [Image])
+(s/defschema IncidentQuery
+  {:incident   (s/maybe s/Any)
    :loading? s/Bool})
-
-(def per-page 5)
 
 (def schema {:menu        [MenuOption]
              :menu-selected (s/maybe MenuOption)
-             :images-query      (merge ImagesQuery
-                                       {:category (s/maybe MenuOption)
-                                        :per-page s/Num})
-             :incident-query   ImagesQuery
-             :image-selected    (s/maybe Image)
-             :random-fact       s/Str
+             :incident-query   IncidentQuery
              :user              (s/maybe User)
              :students          [s/Any]
              :incidents         [s/Any]
+             :current-incident  s/Any
              :teachers          [Teacher]
              :sync              s/Bool
              :current-page      s/Keyword})
@@ -50,16 +44,11 @@
   {:menu               [{:id nil :name "All Categories"}]
    :menu-selected      {:id "1" :name "All"}
    :sync               false
-   :images-query       {:images   nil
-                        :per-page per-page
-                        :loading? false
-                        :category nil}
-   :incident-query     {:images   nil
+   :incident-query     {:incident nil
                         :loading? false}
-   :image-selected     nil
-   :random-fact        ""
    :teachers           []
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
+   :current-incident   nil
    :incidents          []
    :user               {:username "test"}
    :current-page       :incidents})

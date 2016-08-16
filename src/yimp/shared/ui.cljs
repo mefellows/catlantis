@@ -7,7 +7,7 @@
             [medley.core :as m]
             [yimp.utils :as u]
             [yimp.colors :refer [colors]]
-            [yimp.config :as cfg]            
+            [yimp.config :as cfg]
             [camel-snake-kebab.core :as cs :include-macros true]))
 
 (set! js/window.React (js/require "react-native"))
@@ -68,7 +68,7 @@
 (def close-icon (js/require "./images/ic_close.png"))
 (def menu-icon (js/require "./images/ic_menu.png"))
 
-(def navigator-buttons 
+(def navigator-buttons
   {:right-buttons
    [{:id   :create-incident
      :icon add-icon}]
@@ -83,21 +83,22 @@
     (case id
       :menu (rf/dispatch [:nav/toggle-drawer])
       :sync (rf/dispatch [:synchronise])
+      :create-incident (rf/dispatch [:create-incident])
       :user (rf/dispatch [:nav/push id {:screen-type :modal}])
       (rf/dispatch [:nav/push id]))))
-    
+
 (defn navigator [screen title]
   {:screen            screen
    :screen-type       :screen
    :title             title
    :navigator-buttons navigator-buttons})
-                  
+
 (defn create-screen [screen title render-fn]
   {:component
    (r/create-class
      {:reagent-render
       render-fn})
-   :config 
+   :config
    (navigator screen title)
    :on-navigator-event-fn
    navigator-events})

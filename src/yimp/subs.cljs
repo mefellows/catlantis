@@ -50,6 +50,12 @@
       (:user @db))))
 
 (register-sub
+  :current-incident
+  (fn [db _]
+    (reaction
+      (:current-incident @db))))
+
+(register-sub
   :sync-status
   (fn [db _]
     (reaction

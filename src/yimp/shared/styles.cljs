@@ -7,7 +7,8 @@
   (ui/create-stylesheet
     {:menu-container {:flex        0
                       :padding-top 40
-                      :background-color "#ffffff"}
+                      :background-color "#ffffff"
+                      :backface-visibility "hidden"}
      :list-item      {:flex 0}
      :list-item-text {:text-align :center
                       :color (ui/color :black)}
@@ -42,7 +43,7 @@
                            :flex       1
                            :resizeMode "cover"}
      :listview-btn        {:border-width     0
-                           :align-self       :center}                               
+                           :align-self       :center}
      :listview-btn-text   {:color (ui/color :orange800)}
      :listview-row-footer {:flex 1
                            :flex-direction :column

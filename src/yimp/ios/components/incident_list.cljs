@@ -12,17 +12,18 @@
 (def list-view-ds (ds/data-source {:rowHasChanged #(not= %1 %2)}))
 
 (defn submit [id]
-  (print "selected: " id ))
-  
-(defn render-incident-row [{:keys [Summary ID] :as incident}]
+  (print "selected: " id )
+  (rf/dispatch [:incident-load id] ))
+
+(defn render-incident-row [{:keys [summary id] :as incident}]
   [ui/touchable-highlight {:style       (:listview-row styles)
-                           :on-press    #(submit ID)
+                           :on-press    #(submit id)
                            :underlay-color "#efefef"
                            :active-opacity .9}
     [ui/view {:style       (:listview-row styles)}
       [ui/view {:style (:listview-rowcontent styles)}
           [ui/text {}
-            Summary]]
+            summary]]
       [ui/view {:style (:listview-rowaction styles)}
         [ui/text {} " > "]]]])
 
@@ -44,7 +45,7 @@
    {:style (:listview-container styles)
     ;:refresh-control refresh-control}
    }
-    
+
    [ui/list-view (merge
                    {:dataSource    (ds/clone-with-rows list-view-ds incidents)
                     :render-row    (comp r/as-element render-incident-row u/js->cljk)

@@ -100,23 +100,30 @@
       :error-handler #(rf/dispatch-sync [:bad-response %1])})
    db)) ; <- DAH! Must return the state!!
 
+; Fetch a single incident from the local database (does not make API call)
 (register-handler
   :incident-load
   basic-mw
-  (s/fn [db]
-    (let [query-params (cond-> (merge cfg/default-catapi-params
-                                      {:sub-id (get-in db [:user :username])}))]
-      (api/fetch! :favorites query-params
-                  {:handler #(rf/dispatch [:incident-res (-> % :images)])})
-      (assoc-in db [:incident-query :loading?] true))))
+  (s/fn [db [id]]
+    (let [incidents (:incidents db)
+          incident (first
+                     (->> incidents
+                          (filter
+                            (fn [incident]
+                              (= (:id incident) id)))))]
+      (if-not (nil? incident)
+        (let []
+          (rf/dispatch [:nav/push :edit-incident])
+          (assoc db :current-incident incident))
+        db))))
 
 (register-handler
   :incident-res
   basic-mw
-  (s/fn [db [images]]
-    (let [images (if (map? images) [(:image images)] images)]
+  (s/fn [db [incident]]
+    (let [incident (if (map? incident) [(:image incident)] incident)]
       (-> db
-          (assoc-in [:incident-query :images] images)
+          (assoc-in [:incident-query :incident] incident)
           (assoc-in [:incident-query :loading?] false)))))
 
 (register-handler
@@ -162,14 +169,30 @@
      (print response)
      (assoc db :incidents response)))
 
-  (register-handler
-    :load-incidents
-    (s/fn [db _]
-      (ajax.core/GET "http://localhost:8000/incidents"
-      ; (ajax.core/GET "http://yimp.herokuapp.com/incidents"
-       {
-        :response-format :json
-        :keywords? true
-        :handler #(rf/dispatch [:process-incidents-res %1])
-        :error-handler #(rf/dispatch-sync [:bad-response %1])})
-     db)) ; <- DAH! Must return the state!!
+(register-handler
+  :load-incidents
+  (s/fn [db _]
+    (ajax.core/GET "http://localhost:8000/incidents"
+    ; (ajax.core/GET "http://yimp.herokuapp.com/incidents"
+     {
+      :response-format :json
+      :keywords? true
+      :handler #(rf/dispatch [:process-incidents-res %1])
+      :error-handler #(rf/dispatch-sync [:bad-response %1])})
+   db)) ; <- DAH! Must return the state!!
+
+ (register-handler
+   :create-incident
+   (s/fn [db [_]]
+      (rf/dispatch [:nav/push :edit-incident])
+      (assoc db :current-incident {})))
+
+ ; NOTE: handle updates -> currently only adds new.
+ (register-handler
+   :save-incident-local
+   (s/fn [db [incident]]
+     (print "Saving local incident: " incident)
+     (let [incidents (:incidents db)]
+       (assoc db :incidents
+         (conj incidents
+           (assoc incident :synchronised false))))))

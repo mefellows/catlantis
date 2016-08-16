@@ -12,7 +12,7 @@
             [yimp.ios.screens.incidents :refer [incidents]]
             [yimp.ios.screens.detail :refer [detail]]
             [yimp.ios.screens.menu :refer [menu]]
-            [yimp.ios.screens.create-incident :refer [create-incident]]
+            [yimp.ios.screens.edit-incident :refer [edit-incident]]
             [yimp.ios.screens.user :refer [user]]
             [yimp.shared.ui :as ui]))
 
@@ -28,7 +28,7 @@
     (nav/register-screen! students)
     (nav/register-screen! incidents)
     (nav/register-screen! detail)
-    (nav/register-screen! create-incident)
+    (nav/register-screen! edit-incident)
     (nav/register-screen! user)
     (nav/register-reagent-component! :menu menu)
     (nav/start-single-screen-app!
