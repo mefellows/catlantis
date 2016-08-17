@@ -52,18 +52,14 @@
         (assoc db :current-incident incident))
       nil)))
 
-      ;   ; (if (= (:id %1) (:id incident)) incident %1) 
-      ;   %1)
-      ; incidents)
 (defn update-incident "Finds and updates an incident in the db" [db incident]
   (let [incidents (:incidents db)]
     (->>
       incidents
-      (filter #( 
-        (print "mapping => " %) 
-        true))
-      (print)
-      (assoc db :incidents))))
+      (mapv #(let []
+        (if (= (:id %1) (:id incident)) incident %))))))
+      ; (print "Just updated incidents to -> ")
+      ; (assoc db :incidents))))
 
 (register-handler
   :initialize-db
@@ -156,21 +152,28 @@
     (print res)
     (assoc db :sync false)))
 
+(defn sync-records [records]
+  (print "sync records: " records)
+  (ajax.core/POST "http://localhost:8000/sync"
+  ; (ajax.core/POST "http://yimp.herokuapp.com/sync"
+   {
+    :format (ajax.core/json-request-format)
+    :response-format (ajax.core/json-response-format {:keywords? true})
+    :params records
+    :handler #(rf/dispatch [:sync-complete %1])
+    :error-handler #(rf/dispatch-sync [:bad-response %1])})
+)
+
 ; New Handlers
 (register-handler
   :synchronise
   basic-mw
   (s/fn [db [_]]
     (ui/alert "Synchronising in background")
-    (print "dispatch sync!")
-    (ajax.core/POST "http://localhost:8000/sync"
-    ; (ajax.core/POST "http://yimp.herokuapp.com/sync"
-     {
-      :response-format :json
-      :keywords? true
-      :handler #(rf/dispatch [:sync-complete %1])
-      :error-handler #(rf/dispatch-sync [:bad-response %1])})
-    ()
+    (sync-records (let [incidents (:incidents db)]
+      (->> incidents
+        (filterv #(let []
+            (= (:synchronised %1) false))))))
     (assoc db :sync true)))
 
 (register-handler
@@ -213,25 +216,16 @@
      (let [incidents (:incidents db)
            id (:id incident)
            updated-incident (assoc incident :synchronised false)]
-     
-           (print id)
        (if-not (nil? id)
-         (let [foo "bar"]
+         (let []
            ; find and update an incident
            (print "UPDATING")
-            ; (->> (find-incident db id)
-            (->> incident
-                 (update-incident db)))
-         (let [foo "bar"]
+            (->> updated-incident
+                 (update-incident db)
+                 (assoc db :incidents)))
+         (let []
            ; find and update an incident
            (print "INSERTING")
-            db)
-             ; create a new incident
-       ))))
-      ; (assoc db :incidents
-      ;     (-> (assoc incident :synchronised false)
-      ; 
-      ;       ; add to incidents
-      ;       (conj incidents)
-      ;     
-      ;     )))))
+           (->> updated-incident
+             (conj incidents)
+             (assoc db :incidents)))))))

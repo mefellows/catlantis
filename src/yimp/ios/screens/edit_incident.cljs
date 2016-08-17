@@ -1,6 +1,7 @@
 (ns yimp.ios.screens.edit-incident
   (:require [re-frame.core :as rf]
             [reagent.core :as r]
+            [clojure.walk :refer [keywordize-keys]]
             [yimp.shared.styles :refer [styles]]
             [clojure.string :as str]
             [yimp.shared.ui :as ui]))
@@ -10,12 +11,7 @@
 
 (defn on-submit [incident ]
   (print "submitting incident: " incident)
-  (rf/dispatch [:save-incident (:value incident)]))
-  ; (when-not (invalid-username? (:username user))
-  ;   (rf/dispatch [:user-change user])
-  ;   (if (= screen-type :modal)
-  ;     (rf/dispatch [:nav/pop])
-  ;     (rf/dispatch [:nav/push :home]))))
+  (rf/dispatch [:save-incident (keywordize-keys (:value incident))]))
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
