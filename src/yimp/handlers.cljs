@@ -38,6 +38,33 @@
 
 (def basic-mw [#_mid/debug mid/trim-v validate-schema-mw])
 
+
+(defn find-incident "Finds an incident in the given db by id" [db id]
+  (let [incidents (:incidents db)
+    incident (first
+               (->> incidents
+                    (filter
+                      (fn [incident]
+                        (= (:id incident) id)))))]
+    (if-not (nil? incident)
+      (let []
+        (rf/dispatch [:nav/push :edit-incident])
+        (assoc db :current-incident incident))
+      nil)))
+
+      ;   ; (if (= (:id %1) (:id incident)) incident %1) 
+      ;   %1)
+      ; incidents)
+(defn update-incident "Finds and updates an incident in the db" [db incident]
+  (let [incidents (:incidents db)]
+    (->>
+      incidents
+      (filter #( 
+        (print "mapping => " %) 
+        true))
+      (print)
+      (assoc db :incidents))))
+
 (register-handler
   :initialize-db
   basic-mw
@@ -105,17 +132,7 @@
   :incident-load
   basic-mw
   (s/fn [db [id]]
-    (let [incidents (:incidents db)
-          incident (first
-                     (->> incidents
-                          (filter
-                            (fn [incident]
-                              (= (:id incident) id)))))]
-      (if-not (nil? incident)
-        (let []
-          (rf/dispatch [:nav/push :edit-incident])
-          (assoc db :current-incident incident))
-        db))))
+    (find-incident db id)))
 
 (register-handler
   :incident-res
@@ -193,7 +210,28 @@
    basic-mw
    (s/fn [db [incident]]
      (print "Saving local incident: " incident)
-     (let [incidents (:incidents db)]
-      (assoc db :incidents
-        (conj incidents
-          (assoc incident :synchronised false))))))
+     (let [incidents (:incidents db)
+           id (:id incident)
+           updated-incident (assoc incident :synchronised false)]
+     
+           (print id)
+       (if-not (nil? id)
+         (let [foo "bar"]
+           ; find and update an incident
+           (print "UPDATING")
+            ; (->> (find-incident db id)
+            (->> incident
+                 (update-incident db)))
+         (let [foo "bar"]
+           ; find and update an incident
+           (print "INSERTING")
+            db)
+             ; create a new incident
+       ))))
+      ; (assoc db :incidents
+      ;     (-> (assoc incident :synchronised false)
+      ; 
+      ;       ; add to incidents
+      ;       (conj incidents)
+      ;     
+      ;     )))))
