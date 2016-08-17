@@ -189,10 +189,11 @@
 
  ; NOTE: handle updates -> currently only adds new.
  (register-handler
-   :save-incident-local
+   :save-incident
+   basic-mw
    (s/fn [db [incident]]
      (print "Saving local incident: " incident)
      (let [incidents (:incidents db)]
-       (assoc db :incidents
-         (conj incidents
-           (assoc incident :synchronised false))))))
+      (assoc db :incidents
+        (conj incidents
+          (assoc incident :synchronised false))))))
