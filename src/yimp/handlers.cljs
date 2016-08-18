@@ -58,8 +58,6 @@
       incidents
       (mapv #(let []
         (if (= (:id %1) (:id incident)) incident %))))))
-      ; (print "Just updated incidents to -> ")
-      ; (assoc db :incidents))))
 
 (register-handler
   :initialize-db
@@ -114,7 +112,7 @@
 (register-handler
   :load-students
   (s/fn [db _]
-    (ajax.core/GET "http://localhost:8000/students"
+    (ajax.core/GET "http://localhost:3000/students"
     ; (ajax.core/GET "http://yimp.herokuapp.com/students"
      {
       :response-format :json
@@ -154,7 +152,7 @@
 
 (defn sync-records [records]
   (print "sync records: " records)
-  (ajax.core/POST "http://localhost:8000/sync"
+  (ajax.core/POST "http://localhost:3000/sync"
   ; (ajax.core/POST "http://yimp.herokuapp.com/sync"
    {
     :format (ajax.core/json-request-format)
@@ -192,7 +190,7 @@
 (register-handler
   :load-incidents
   (s/fn [db _]
-    (ajax.core/GET "http://localhost:8000/incidents"
+    (ajax.core/GET "http://localhost:3000/incidents"
     ; (ajax.core/GET "http://yimp.herokuapp.com/incidents"
      {
       :response-format :json

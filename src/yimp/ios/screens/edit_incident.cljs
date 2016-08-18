@@ -17,11 +17,12 @@
 (def Form (r/adapt-react-class (.-Form t.form)))
 (defn incident [new?]
 
-(let [obj {:start_time (t.maybe t.String)
-           :end_time (t.maybe t.String)
+(let [obj {:start_time (t.maybe t.Date)
+           :end_time (t.maybe t.Date)
            :description (t.maybe t.String)
            :follow_up (t.maybe t.Boolean)
-           :summary (t.maybe t.String)
+           :summary t.String
+           :student t.Number
            :location (t.maybe t.String)}]
   (if-not new?
     (t.struct (clj->js (assoc obj :id t.Number)))
