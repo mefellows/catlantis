@@ -15,18 +15,33 @@
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
-(defn incident [new?]
+(defn extract-student-enum [student]
+  (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
 
-(let [obj {:start_time (t.maybe t.Date)
-           :end_time (t.maybe t.Date)
-           :description (t.maybe t.String)
-           :follow_up (t.maybe t.Boolean)
-           :summary t.String
-           :student t.Number
-           :location (t.maybe t.String)}]
-  (if-not new?
-    (t.struct (clj->js (assoc obj :id t.Number)))
-    (t.struct (clj->js obj)))))
+(def Student 
+  (let [students (rf/subscribe [:students])]
+    (print "Student studetns =>" @students)
+    (print @students)
+    (->> @students
+      (filter #(let [] (> (:id %1) 0)))
+      (mapv extract-student-enum)
+      (flatten)
+      (into {})
+      (clj->js)
+      (t.enums))))
+      
+
+(defn incident [new?]
+  (let [obj {:start_time (t.maybe t.Date)
+             :end_time (t.maybe t.Date)
+             :description (t.maybe t.String)
+             :follow_up (t.maybe t.Boolean)
+             :summary t.String
+             :student Student
+             :location (t.maybe t.String)}]
+    (if-not new?
+      (t.struct (clj->js (assoc obj :id t.Number)))
+      (t.struct (clj->js obj)))))
 
 ; TODO: Move state into GLOBAL app state, not confined to component
 (def edit-incident
@@ -39,10 +54,7 @@
       :reagent-render
       (fn [props]
         (this-as this
-                 (let [{:keys [value]} (r/state this)
-                      ;  sbmt (partial on-submit {}
-                      ;                (-> props :config :screen-type))
-                                     ]
+                 (let [{:keys [value]} (r/state this)]
                     [ui/view {:style (:form-container styles)}
                      [ui/scroll-view
                       {:style (:scroll-container styles)}
