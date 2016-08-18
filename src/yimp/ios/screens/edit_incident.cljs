@@ -8,10 +8,17 @@
 
 (defn invalid-form? []
   false)
+  ; (when (.isValid (.validate (-> props
+  ;   (aget "refs")
+  ;   (aget "form"))))
 
-(defn on-submit [incident ]
+(defn on-submit [props incident]
   (print "submitting incident: " incident)
-  (rf/dispatch [:save-incident (keywordize-keys (:value incident))]))
+  (let [validation-result (.validate (-> props
+                                         (aget "refs")
+                                         (aget "form")))]
+    (when (empty? (js->clj (aget validation-result "errors")))
+      (rf/dispatch [:save-incident (keywordize-keys (:value incident))]))))
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
@@ -20,15 +27,13 @@
 
 (def Student 
   (let [students (rf/subscribe [:students])]
-    (print "Student studetns =>" @students)
-    (print @students)
-    (->> @students
-      (filter #(let [] (> (:id %1) 0)))
-      (mapv extract-student-enum)
-      (flatten)
-      (into {})
-      (clj->js)
-      (t.enums))))
+    (->> @students 
+         (filter #(let [] (> (:id %1) 0)))
+         (mapv extract-student-enum)
+         (flatten)
+         (into {})
+         (clj->js)
+         (t.enums))))
       
 
 (defn incident [new?]
@@ -59,11 +64,11 @@
                      [ui/scroll-view
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
-                             :type (incident (empty? value))
-                             :value value
+                             :type (incident (nil? (:id value)))
+                             :value (merge {:student 1 :summary "test"} value)
                              :on-change #(r/set-state this {:value (js->clj %1)})
                              :options {:fields {:id {:hidden true}}}}]
-                      [ui/button {:on-press    #(on-submit (r/state this))
+                      [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)
                                   :text-style  (:submit-btn-text styles)
                                   :is-disabled (invalid-form?)}
