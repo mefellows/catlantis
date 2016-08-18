@@ -6,19 +6,16 @@
             [clojure.string :as str]
             [yimp.shared.ui :as ui]))
 
-(defn invalid-form? []
-  false)
-  ; (when (.isValid (.validate (-> props
-  ;   (aget "refs")
-  ;   (aget "form"))))
+(defn invalid-form? [props]
+  (let [validation-result (.validate (-> props
+                                         (aget "refs")
+                                         (aget "form")))]  
+  (empty? (js->clj (aget validation-result "errors")))))
 
 (defn on-submit [props incident]
   (print "submitting incident: " incident)
-  (let [validation-result (.validate (-> props
-                                         (aget "refs")
-                                         (aget "form")))]
-    (when (empty? (js->clj (aget validation-result "errors")))
-      (rf/dispatch [:save-incident (keywordize-keys (:value incident))]))))
+  (when (invalid-form? props)
+    (rf/dispatch [:save-incident (keywordize-keys (:value incident))])))
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
@@ -71,7 +68,7 @@
                       [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)
                                   :text-style  (:submit-btn-text styles)
-                                  :is-disabled (invalid-form?)}
+                                  :is-disabled #(invalid-form? props)}
                        "Submit"]]])))})
    :config
    {:screen            :edit-incident
