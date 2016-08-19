@@ -4,12 +4,14 @@
             [clojure.walk :refer [keywordize-keys]]
             [yimp.shared.styles :refer [styles]]
             [clojure.string :as str]
+            [cljs-time.core :as time]
+            [cljs-time.format :refer [formatter parse unparse]]
             [yimp.shared.ui :as ui]))
 
 (defn invalid-form? [props]
   (let [validation-result (.validate (-> props
                                          (aget "refs")
-                                         (aget "form")))]  
+                                         (aget "form")))]
   (empty? (js->clj (aget validation-result "errors")))))
 
 (defn on-submit [props incident]
@@ -22,16 +24,47 @@
 (defn extract-student-enum [student]
   (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
 
-(def Student 
+; Turns String into a Date
+; Expects format: 2016-08-18T20:41:42Z
+(defn time-parser [val]
+  (print "time-parser" val)
+  (js/console.log  "time-parser" (clj->js val))
+  (if-not (nil? val)
+    (let []
+      (js/console.log (clj->js (parse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
+      (clj->js (parse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
+    (clj->js (time/now))))
+
+
+; Turn string into correct value!
+(defn time-formatter [val]
+  (js/console.log "time-formatter: " val)
+  (if-not (nil? val)
+    (let []
+      (js/console.log (clj->js (unparse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
+      (clj->js (unparse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
+    (clj->js (time/now))))
+
+(def date-transformer
+  (->> {:format time-parser
+        :parse time-formatter}))
+
+(def options
+  {:fields {:id {:hidden true}
+            :start_time {:format #(str "a date")
+                         :transformer date-transformer}
+            :end_time {:format #(str "a date")
+                         :transformer date-transformer}}})
+
+(def Student
   (let [students (rf/subscribe [:students])]
-    (->> @students 
+    (->> @students
          (filter #(let [] (> (:id %1) 0)))
          (mapv extract-student-enum)
          (flatten)
          (into {})
          (clj->js)
          (t.enums))))
-      
 
 (defn incident [new?]
   (let [obj {:start_time (t.maybe t.Date)
@@ -56,15 +89,22 @@
       :reagent-render
       (fn [props]
         (this-as this
-                 (let [{:keys [value]} (r/state this)]
+                 (let [{:keys [value]} (r/state this)
+                       start-value (-> value
+                                ; (assoc :start_time (clj->js (time/now)))
+                                (assoc :student 1) ; TODO: Get rid of me
+                                (assoc :summary "Enter summary here") ; TODO: get rid of me
+                                ; (assoc :end_time (clj->js (time/now)))
+                                )]
+
                     [ui/view {:style (:form-container styles)}
                      [ui/scroll-view
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
                              :type (incident (nil? (:id value)))
-                             :value (merge {:student 1 :summary "test"} value)
+                             :value (merge start-value value)
                              :on-change #(r/set-state this {:value (js->clj %1)})
-                             :options {:fields {:id {:hidden true}}}}]
+                             :options options}]
                       [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)
                                   :text-style  (:submit-btn-text styles)
