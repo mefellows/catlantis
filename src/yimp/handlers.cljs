@@ -112,8 +112,8 @@
 (register-handler
   :load-students
   (s/fn [db _]
-    (ajax.core/GET "http://localhost:3000/students"
-    ; (ajax.core/GET "http://yimp.herokuapp.com/students"
+    ; (ajax.core/GET "http://localhost:3000/students"
+    (ajax.core/GET "http://yimp.herokuapp.com/students"
      {
       :response-format :json
       :keywords? true
@@ -151,13 +151,13 @@
     (assoc db :sync false)))
 
 (defn sync-records [records]
-  (print "sync records: " records)
-  (ajax.core/POST "http://localhost:3000/sync"
-  ; (ajax.core/POST "http://yimp.herokuapp.com/sync"
+  (js/console.log "sync records: " (clj->js records))
+  ; (ajax.core/POST "http://localhost:3000/sync"
+  (ajax.core/POST "http://yimp.herokuapp.com/sync"
    {
     :format (ajax.core/json-request-format)
     :response-format (ajax.core/json-response-format {:keywords? true})
-    :params records
+    :params (clj->js records)
     :handler #(rf/dispatch [:sync-complete %1])
     :error-handler #(rf/dispatch-sync [:bad-response %1])})
 )
@@ -191,8 +191,8 @@
 (register-handler
   :load-incidents
   (s/fn [db _]
-    (ajax.core/GET "http://localhost:3000/incidents"
-    ; (ajax.core/GET "http://yimp.herokuapp.com/incidents"
+    ; (ajax.core/GET "http://localhost:3000/incidents"
+    (ajax.core/GET "http://yimp.herokuapp.com/incidents"
      {
       :response-format :json
       :keywords? true

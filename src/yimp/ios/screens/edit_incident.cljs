@@ -20,7 +20,9 @@
           ; convert date to string objects
           start_time (:start_time value)
           end_time (:end_time value)
+          student (:student value)
           updated (-> value
+            (assoc :student (int student))
             (assoc :start_time (.toISOString (new js/Date start_time)))
             (assoc :end_time (.toISOString (new js/Date end_time))))]
             (js/console.log "converted dates to: " (clj->js updated))
@@ -29,41 +31,9 @@
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
 (defn extract-student-enum [student]
-  (let [] {(int (:id student)) (str (:first_name student) " " (:last_name student))}))
+  (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
 
-; Turns String into a Date
-; Expects format: 2016-08-18T20:41:42Z
-(defn time-parser [val]
-  (print "time-parser" val)
-  (js/console.log  "time-parser" (clj->js val))
-  (if-not (nil? val)
-    (let []
-      (js/console.log (clj->js (parse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
-      (clj->js (parse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
-    (clj->js (time/now))))
-
-
-; Turn string into correct value!
-(defn time-formatter [val]
-  (js/console.log "time-formatter: " val)
-  (if-not (nil? val)
-    (let []
-      (js/console.log (clj->js (unparse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
-      (clj->js (unparse (formatter "yyyy-MM-dd'T'HH:mm:ssZ") val)))
-    (clj->js (time/now))))
-
-(def date-transformer
-  (->> {:format time-parser
-        :parse time-formatter}))
-
-(def options
-  {:fields {:id {:hidden true}
-            :start_time {:format #(str "a date")
-                         :transformer date-transformer}
-            :end_time {:format #(str "a date")
-                         :transformer date-transformer}}})
-
-(def Student
+(defn Student []
   (let [students (rf/subscribe [:students])]
     (->> @students
          (filter #(let [] (> (:id %1) 0)))
@@ -79,7 +49,7 @@
              :description (t.maybe t.String)
              :follow_up (t.maybe t.Boolean)
              :summary t.String
-             :student Student
+             :student (Student)
              :location (t.maybe t.String)}]
     (if-not new?
       (t.struct (clj->js (assoc obj :id t.Number)))
@@ -113,8 +83,7 @@
                               :value value
                               ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (new js/Date "1995-12-17T03:24:00")) :end_time (clj->js (new js/Date "2995-12-17T03:24:00"))})
                               ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (time/now)) :end_time (clj->js (time/now))})
-                             :on-change #(r/set-state this {:value (js->clj %1)})
-                             :options options}]
+                             :on-change #(r/set-state this {:value (js->clj %1)})}]
                       [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)
                                   :text-style  (:submit-btn-text styles)
