@@ -10,7 +10,7 @@
     [ajax.core :refer [GET]]
     [yimp.config :as cfg]
     [clojure.string :as str]
-    [yimp.api :as api]
+    [yimp.api :as api]    
     [re-frame.core :as rf]))
 
 (enable-console-print!)
@@ -176,8 +176,9 @@
 
 (register-handler
   :bad-response
-  (s/fn [db [_ _]])
-  (print "error"))
+  (s/fn [db [_ body]]
+    (print "error: " body)
+    db))
 
   (register-handler
    :process-incidents-res

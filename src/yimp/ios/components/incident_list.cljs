@@ -34,10 +34,10 @@
      [ui/activity-indicator-ios
       {:style (:indicator styles)}]]))
 
-(def refresh-control
-  (r/as-element [ui/refresh-control {:refreshing #(true)
-                                     :on-refresh #(print "refreshing on refresh")
-                                     :title "Loading incidents..."}]))
+; (def refresh-control
+;   (r/as-element [ui/refresh-control {:refreshing #(true)
+;                                      :on-refresh #(print "refreshing on refresh")
+;                                      :title "Loading incidents..."}]))
 
 ; TODO: add touchable highlight and click-through
 (defn incident-list [incidents]
