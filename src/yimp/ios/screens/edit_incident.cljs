@@ -4,8 +4,6 @@
             [clojure.walk :refer [keywordize-keys]]
             [yimp.shared.styles :refer [styles]]
             [clojure.string :as str]
-            [cljs-time.core :as time]
-            [cljs-time.format :refer [formatter parse unparse]]
             [yimp.shared.ui :as ui]))
 
 (defn valid-form? [props]

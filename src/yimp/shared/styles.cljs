@@ -111,7 +111,7 @@
 
      :submit-btn   {:background-color (ui/color :cyan300)
                     :border-width     0
-                    :width            "75%"
+                    :width            "90%"
                     :opacity          0.9
                     :align-self       :center}
 :submit-btn-text {:color (ui/color :white)}}))

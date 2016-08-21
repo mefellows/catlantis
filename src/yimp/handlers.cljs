@@ -4,6 +4,7 @@
     [schema.core :as s :include-macros true]
     [print.foo :as pf :include-macros true]
     [yimp.db :refer [app-db schema]]
+    [yimp.shared.config :refer [env]]
     [yimp.shared.navigation :as nav]
     [yimp.shared.ui :as ui]
     [re-frame.middleware :as mid]
@@ -113,7 +114,7 @@
   :load-students
   (s/fn [db _]
     ; (ajax.core/GET "http://localhost:3000/students"
-    (ajax.core/GET "http://yimp.herokuapp.com/students"
+    (ajax.core/GET (str (:hostname env) "/students")
      {
       :response-format :json
       :keywords? true
@@ -153,7 +154,7 @@
 (defn sync-records [records]
   (js/console.log "sync records: " (clj->js records))
   ; (ajax.core/POST "http://localhost:3000/sync"
-  (ajax.core/POST "http://yimp.herokuapp.com/sync"
+  (ajax.core/POST (str (:hostname env) "/sync")
    {
     :format (ajax.core/json-request-format)
     :response-format (ajax.core/json-response-format {:keywords? true})
@@ -192,7 +193,7 @@
   :load-incidents
   (s/fn [db _]
     ; (ajax.core/GET "http://localhost:3000/incidents"
-    (ajax.core/GET "http://yimp.herokuapp.com/incidents"
+    (ajax.core/GET (str (:hostname env) "/incidents")
      {
       :response-format :json
       :keywords? true

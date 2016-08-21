@@ -15,7 +15,6 @@
                  [bidi "2.0.9"]
                  [cljs-ajax "0.5.4"]
                  [funcool/tubax "0.2.0"]
-                 [com.andrewmcveigh/cljs-time "0.4.0"]
                  [natal-shell "0.2.1"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-6"]]
