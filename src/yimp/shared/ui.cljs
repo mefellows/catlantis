@@ -10,24 +10,24 @@
             [yimp.config :as cfg]
             [camel-snake-kebab.core :as cs :include-macros true]))
 
-(set! js/window.React (js/require "react-native"))
+(def ReactNative (js/require "react-native"))
+; (set! js/window.React (js/require "react-native"))
 
-(def text (r/adapt-react-class (.-Text js/React)))
-(def view (r/adapt-react-class (.-View js/React)))
-(def scroll-view (r/adapt-react-class (.-ScrollView js/React)))
-(def image (r/adapt-react-class (.-Image js/React)))
-(def refresh-control (r/adapt-react-class (.-RefreshControl js/React)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
-(def touchable-opacity (r/adapt-react-class (.-TouchableOpacity js/React)))
-(def touchable-without-feedback (r/adapt-react-class (.-TouchableWithoutFeedback js/React)))
-(def list-view (r/adapt-react-class (.-ListView js/React)))
-(def activity-indicator-ios (r/adapt-react-class (.-ActivityIndicatorIOS js/React)))
-(def text-input (r/adapt-react-class (.-TextInput js/React)))
-(def list-item (r/adapt-react-class (js/require "react-native-listitem")))
-; (def image-progress (r/adapt-react-class (js/require "react-native-image-progress")))
+(def text (r/adapt-react-class (.-Text ReactNative)))
+(def view (r/adapt-react-class (.-View ReactNative)))
+(def scroll-view (r/adapt-react-class (.-ScrollView ReactNative)))
+(def image (r/adapt-react-class (.-Image ReactNative)))
+(def refresh-control (r/adapt-react-class (.-RefreshControl ReactNative)))
+(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
+(def touchable-opacity (r/adapt-react-class (.-TouchableOpacity ReactNative)))
+(def touchable-without-feedback (r/adapt-react-class (.-TouchableWithoutFeedback ReactNative)))
+(def list-view (r/adapt-react-class (.-ListView ReactNative)))
+(def activity-indicator-ios (r/adapt-react-class (.-ActivityIndicatorIOS ReactNative)))
+(def text-input (r/adapt-react-class (.-TextInput ReactNative)))
 (def button (r/adapt-react-class (js/require "apsl-react-native-button")))
-(def LinkingIOS (.-LinkingIOS js/React))
+(def LinkingIOS (.-LinkingIOS ReactNative))
 (def dismiss-keyboard (js/require "dismissKeyboard"))
+(def keyboard-avoiding-view (r/adapt-react-class (.-KeyboardAvoidingView ReactNative)))
 (def EStyleSheet (aget (js/require "react-native-extended-stylesheet") "default"))
 
 (defn get-window
@@ -52,7 +52,7 @@
   (.openURL LinkingIOS url))
 
 (defn alert [title]
-  (.alert (.-Alert js/React) title))
+  (.alert (.-Alert ReactNative) title))
 
 (defn anim-preset
   ([kw] (anim-preset kw {}))

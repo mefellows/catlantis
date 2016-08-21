@@ -11,10 +11,7 @@
     "react-native-controllers",
     "react-native-navigation",
     "react-native-extended-stylesheet",
-    "react-native-listitem",
     "stream",
-    "react-native-image-progress",
-    "react-native-keyboard-spacer",
     "apsl-react-native-button",
     "dismissKeyboard",
     "tcomb-form-native"

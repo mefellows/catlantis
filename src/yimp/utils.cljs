@@ -3,7 +3,7 @@
             [clojure.walk :as w]
             [print.foo :as pf :include-macros true]))
 
-(set! js/React (js/require "react-native"))
+; (set! js/React (js/require "react-native"))
 
 (def js->cljk #(js->clj % :keywordize-keys true))
 

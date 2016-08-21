@@ -78,9 +78,8 @@
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
                              :type (incident (nil? (:id value)))
-                              :value value
-                              ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (new js/Date "1995-12-17T03:24:00")) :end_time (clj->js (new js/Date "2995-12-17T03:24:00"))})
-                              ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (time/now)) :end_time (clj->js (time/now))})
+                             :value value
+                             :style {:height 5000}
                              :on-change #(r/set-state this {:value (js->clj %1)})}]
                       [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)

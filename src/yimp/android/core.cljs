@@ -1,21 +1,20 @@
 (ns yimp.android.core
   (:require [reagent.core :as r :refer [atom]]
             [re-frame.core :refer [subscribe dispatch dispatch-sync]]
-            [yimp.handlers]
             [yimp.subs]))
 
-(set! js/window.React (js/require "react-native"))
+(def ReactNative (js/require "react-native"))
 
-(def app-registry (.-AppRegistry js/React))
-(def text (r/adapt-react-class (.-Text js/React)))
-(def view (r/adapt-react-class (.-View js/React)))
-(def image (r/adapt-react-class (.-Image js/React)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
+(def app-registry (.-AppRegistry ReactNative))
+(def text (r/adapt-react-class (.-Text ReactNative)))
+(def view (r/adapt-react-class (.-View ReactNative)))
+(def image (r/adapt-react-class (.-Image ReactNative)))
+(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
 
 (def logo-img (js/require "./images/cljs.png"))
 
 (defn alert [title]
-      (.alert (.-Alert js/React) title))
+      (.alert (.-Alert ReactNative) title))
 
 (defn app-root []
   (let [greeting (subscribe [:get-greeting])]
@@ -30,4 +29,4 @@
 
 (defn init []
       (dispatch-sync [:initialize-db])
-      (.registerComponent app-registry "yimp" #(r/reactify-component app-root)))
+      (.registerComponent app-registry "FutureApp" #(r/reactify-component app-root)))

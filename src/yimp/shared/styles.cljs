@@ -56,9 +56,10 @@
      :container     {:flex             1
                      :background-color :transparent
                      :flex-direction   :row
-                     :height 600}
+                     :height 1000}
      :scroll-container {:flex 8
-                        :padding 20}
+                        :padding 20
+                        :height 1000}
      :footer-container {:flex 2}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
      :first-item   {:margin-top 60}
