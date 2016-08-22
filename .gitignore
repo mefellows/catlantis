@@ -50,3 +50,6 @@ target/
 # Figwheel
 #
 figwheel_server.log
+
+# Compiled test resources
+resources/test/compiled.js
