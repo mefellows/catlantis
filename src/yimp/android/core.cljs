@@ -29,4 +29,4 @@
 
 (defn init []
       (dispatch-sync [:initialize-db])
-      (.registerComponent app-registry "FutureApp" #(r/reactify-component app-root)))
+      (.registerComponent app-registry "yimp" #(r/reactify-component app-root)))

@@ -17,10 +17,11 @@
       (.alert (.-Alert ReactNative) title))
 
 (defn app-root []
-  (let [greeting (subscribe [:get-greeting])]
+  ; (let [greeting (subscribe [:get-greeting])]
+  (let [greeting "aoeu"]
     (fn []
       [view {:style {:flex-direction "column" :margin 40 :align-items "center"}}
-       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} @greeting]
+       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} greeting]
        [image {:source logo-img
                :style  {:width 80 :height 80 :margin-bottom 30}}]
        [touchable-highlight {:style {:background-color "#999" :padding 10 :border-radius 5}
@@ -28,8 +29,8 @@
         [text {:style {:color "white" :text-align "center" :font-weight "bold"}} "press me"]]])))
 
 (defn init []
-      (dispatch-sync [:initialize-db])
-      (.registerComponent app-registry "FutureApp" #(r/reactify-component app-root)))
+      ; (dispatch-sync [:initialize-db])
+      (.registerComponent app-registry "yimp" #(r/reactify-component app-root)))
 
 
 ; (ns yimp.ios.core
@@ -53,7 +54,7 @@
 ; (s/set-fn-validation! goog.DEBUG)
 ; (def nav-content-color (ui/color :orange800))
 ; 
-; (defn init-nav []
+; (defn app-root []
 ;   (let [page (rf/subscribe [:current-page])
 ;         u (rf/subscribe [:user])
 ;         username (:username @u)]
@@ -79,6 +80,6 @@
 ; 
 ; (defn init []
 ;   (rf/dispatch-sync [:initialize-db])
-;   (init-nav)
+;   (app-root)
 ;   (rf/dispatch [:load-students])
 ;   (rf/dispatch [:load-incidents]))

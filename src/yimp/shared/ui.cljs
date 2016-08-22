@@ -25,7 +25,6 @@
 (def activity-indicator-ios (r/adapt-react-class (.-ActivityIndicatorIOS ReactNative)))
 (def text-input (r/adapt-react-class (.-TextInput ReactNative)))
 (def button (r/adapt-react-class (js/require "apsl-react-native-button")))
-(def LinkingIOS (.-LinkingIOS ReactNative))
 (def dismiss-keyboard (js/require "dismissKeyboard"))
 (def keyboard-avoiding-view (r/adapt-react-class (.-KeyboardAvoidingView ReactNative)))
 (def EStyleSheet (aget (js/require "react-native-extended-stylesheet") "default"))
@@ -47,9 +46,6 @@
       u/obj->hash-map))
 
 (build-stylesheet)
-
-(defn open-url [url]
-  (.openURL LinkingIOS url))
 
 (defn alert [title]
   (.alert (.-Alert ReactNative) title))
