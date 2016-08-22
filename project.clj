@@ -25,6 +25,14 @@
                           ["with-profile" "prod" "cljsbuild" "once" "ios"]
                           ;["with-profile" "prod" "cljsbuild" "once" "android"]
                           ]}
+  :cljsbuild {:builds {:test {:source-paths ["test" "cljs"]
+                            :compiler {:output-to "resources/test/compiled.js"
+                                       :optimizations :whitespace
+                                       :pretty-print true}}}
+            :test-commands {"test" ["phantomjs"
+                                    ; Files will be crated later:
+                                    "resources/test/test.js"
+                                    "resources/test/test.html"]}}
   :profiles {:dev  {:dependencies [[figwheel-sidecar "0.5.0-6"]
                                    [com.cemerick/piggieback "0.2.1"]]
                     :source-paths ["src" "env/dev"]
@@ -57,4 +65,12 @@
                                                                   :optimize-constants true
                                                                   :optimizations      :simple
                                                                   :closure-defines    {"goog.DEBUG" false}}}}}
-                    }})
+                    }
+              :test {:cljsbuild {:builds {:ios {:source-paths ["src" "test/cljs"]
+                                                :compiler {:output-to "resources/public/js/main-test.js"
+                                                           :optimizations :whitespace
+                                                           :pretty-print true}}}
+                                 :test-commands {"unit" ["phantomjs"
+                                                         "resources/test/phantom/runner.js"
+                                                         "resources/test/test.html"]}}
+                                                           }})
