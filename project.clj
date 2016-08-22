@@ -25,7 +25,8 @@
                           ["with-profile" "prod" "cljsbuild" "once" "ios"]
                           ;["with-profile" "prod" "cljsbuild" "once" "android"]
                           ]}
-  :cljsbuild {:builds {:test {:source-paths ["test" "cljs"]
+  :test-paths ["test/clj"]                          
+  :cljsbuild {:builds {:test {:source-paths ["test/cljs"]
                             :compiler {:output-to "resources/test/compiled.js"
                                        :optimizations :whitespace
                                        :pretty-print true}}}
@@ -65,12 +66,4 @@
                                                                   :optimize-constants true
                                                                   :optimizations      :simple
                                                                   :closure-defines    {"goog.DEBUG" false}}}}}
-                    }
-              :test {:cljsbuild {:builds {:ios {:source-paths ["src" "test/cljs"]
-                                                :compiler {:output-to "resources/public/js/main-test.js"
-                                                           :optimizations :whitespace
-                                                           :pretty-print true}}}
-                                 :test-commands {"unit" ["phantomjs"
-                                                         "resources/test/phantom/runner.js"
-                                                         "resources/test/test.html"]}}
-                                                           }})
+                    }})
