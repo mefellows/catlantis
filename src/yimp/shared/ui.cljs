@@ -24,7 +24,6 @@
 (def activity-indicator-ios (r/adapt-react-class (.-ActivityIndicatorIOS js/React)))
 (def text-input (r/adapt-react-class (.-TextInput js/React)))
 (def list-item (r/adapt-react-class (js/require "react-native-listitem")))
-; (def image-progress (r/adapt-react-class (js/require "react-native-image-progress")))
 (def button (r/adapt-react-class (js/require "apsl-react-native-button")))
 (def LinkingIOS (.-LinkingIOS js/React))
 (def dismiss-keyboard (js/require "dismissKeyboard"))

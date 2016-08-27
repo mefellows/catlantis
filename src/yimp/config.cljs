@@ -8,3 +8,7 @@
   {:format  "xml"
    :size    "med"
    :api-key thecatapi-key})
+
+(def env
+  {:hostname "http://localhost:3000"})
+  ; {:hostname "http://yimp.herokuapp.com"})
