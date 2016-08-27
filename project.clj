@@ -25,26 +25,30 @@
                           ["with-profile" "prod" "cljsbuild" "once" "ios"]
                           ;["with-profile" "prod" "cljsbuild" "once" "android"]
                           ]}
-  :test-paths ["test/clj"]                          
+            ; "test" ^{:doc "Run tests continuously on change"}
+            ;              ["do" "clean"
+            ;               ["cljsbuild" "test" "unit"]
+            ;               ]}
   :cljsbuild {:builds {:test {:source-paths ["test/cljs"]
-                            :compiler {:output-to "resources/test/compiled.js"
-                                       :optimizations :whitespace
-                                       :pretty-print true}}}
-            :test-commands {"test" ["phantomjs"
-                                    ; Files will be crated later:
-                                    "resources/test/test.js"
+                              ; :figwheel     {:on-jsload "cljs.yimp.test/run"}
+                              ; :figwheel     true
+                              :compiler {:output-to "resources/public/js/main-test.js"
+                                         :optimizations :none
+                                         :pretty-print true}}}
+            :test-commands {"unit" ["phantomjs"
+                                    "resources/test/phantom/runner.js"
                                     "resources/test/test.html"]}}
   :profiles {:dev  {:dependencies [[figwheel-sidecar "0.5.0-6"]
                                    [com.cemerick/piggieback "0.2.1"]]
                     :source-paths ["src" "env/dev"]
-                    :cljsbuild    {:builds {:ios     {:source-paths ["src" "env/dev"]
-                                                      :figwheel     true
+                    :cljsbuild    {:builds {:ios     {:source-paths ["src" "env/dev" "test/cljs"]
+                                                      :figwheel     {:on-jsload "cljs.yimp.test/run"}
                                                       :compiler     {:output-to     "target/ios/not-used.js"
                                                                      :main          "env.ios.main"
                                                                      :output-dir    "target/ios"
                                                                      :optimizations :none}}
-                                            :android {:source-paths ["src" "env/dev"]
-                                                      :figwheel     true
+                                            :android {:source-paths ["src" "env/dev" "test/cljs"]
+                                                      :figwheel     {:on-jsload "cljs.yimp.test/run"}
                                                       :compiler     {:output-to     "target/android/not-used.js"
                                                                      :main          "env.android.main"
                                                                      :output-dir    "target/android"

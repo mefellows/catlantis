@@ -3,3 +3,11 @@
 (in-ns 'yimp.ios.core)
 (dispatch [:set-greeting "Hello Native World!"])
 (rf/dispatch [:set-greeting "Hello Native World!"])
+(ns yimp.test
+  (:require [cljs.test :refer-macros [run-all-tests run-tests]]))
+  (deftest do-i-work
+    (is (= 1 2)))
+(ns yimp.foo-test
+  (:require [cljs.test :refer-macros [deftest is]]))
+(deftest test-do-i-work
+  (is (= 1 2)))
