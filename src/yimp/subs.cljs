@@ -56,7 +56,7 @@
       (:current-incident @db))))
 
 (register-sub
-  :sync-status
+  :sync
   (fn [db _]
     (reaction
       (:sync @db))))

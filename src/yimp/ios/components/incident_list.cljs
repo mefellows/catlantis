@@ -40,15 +40,15 @@
 ;                                      :title "Loading incidents..."}]))
 
 ; TODO: add touchable highlight and click-through
-(defn incident-list [incidents]
-  [ui/scroll-view
-   {:style (:listview-container styles)
-    ;:refresh-control refresh-control}
-   }
-
-   [ui/list-view (merge
-                   {:dataSource    (ds/clone-with-rows list-view-ds incidents)
-                    :render-row    (comp r/as-element render-incident-row u/js->cljk)
-                    :style         (merge-with (:container styles) (:first-item styles))
-                    :render-footer (comp r/as-element (partial footer true))}
-                   {})]])
+(defn incident-list [incidents loading?]
+  (when (not-empty incidents)
+    [ui/scroll-view
+     {:style (:listview-container styles)
+      ;:refresh-control refresh-control}
+     }
+     [ui/list-view (merge
+                     {:dataSource    (ds/clone-with-rows list-view-ds incidents)
+                      :render-row    (comp r/as-element render-incident-row u/js->cljk)
+                      :style         (merge-with (:container styles) (:first-item styles))
+                      :render-footer (comp r/as-element (partial footer loading?))}
+                     {})]]))

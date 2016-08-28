@@ -6,5 +6,6 @@
 (def incidents
   (ui/create-screen :incidents "Incidents"
     (fn [props]
-      (let [incidents (rf/subscribe [:incidents])]
-        [incident-list @incidents]))))
+      (let [incidents (rf/subscribe [:incidents])
+           loading (rf/subscribe [:sync])]
+        [incident-list @incidents @loading]))))

@@ -28,6 +28,19 @@
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
+(def s (.-stylesheet (.-Form t.form)))
+(def _ (js/require "lodash"))
+
+; See https://github.com/gcanti/tcomb-form-native/blob/master/lib/stylesheets/bootstrap.js
+; for more you can modify.
+(def text-area-style 
+  (let [stylesheet (_.cloneDeep s)
+        updated (-> stylesheet
+                    (.-textbox)
+                    (.-normal)
+                    (aset "height" 150))]
+        stylesheet))
+        
 (defn extract-student-enum [student]
   (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
 
@@ -40,6 +53,11 @@
          (into {})
          (clj->js)
          (t.enums))))
+         
+ (def options
+   {:fields {:id {:hidden true}
+             :description {:stylesheet text-area-style
+                           :multiline true}}})
 
 (defn incident [new?]
   (let [obj {:start_time (t.maybe t.Date)
@@ -79,6 +97,7 @@
                       [Form {:ref "form"
                              :type (incident (nil? (:id value)))
                               :value value
+                              :options options
                               ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (new js/Date "1995-12-17T03:24:00")) :end_time (clj->js (new js/Date "2995-12-17T03:24:00"))})
                               ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (time/now)) :end_time (clj->js (time/now))})
                              :on-change #(r/set-state this {:value (js->clj %1)})}]

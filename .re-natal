@@ -15,7 +15,8 @@
     "stream",
     "apsl-react-native-button",
     "dismissKeyboard",
-    "tcomb-form-native"
+    "tcomb-form-native",
+    "lodash"
   ],
   "imageDirs": [
     "images"

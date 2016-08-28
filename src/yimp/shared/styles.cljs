@@ -1,7 +1,8 @@
 (ns yimp.shared.styles
   (:refer-clojure :exclude [pop!])
   (:require-macros [print.foo :as pf])
-  (:require [yimp.shared.ui :as ui]))
+  (:require [yimp.shared.ui :as ui]
+            [reagent.core :as r]))
 
 (def styles
   (ui/create-stylesheet

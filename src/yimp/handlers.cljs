@@ -108,7 +108,9 @@
    ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
    (print response)
-   (assoc db :students response)))
+   (if-not (nil? response)   
+    (assoc db :students response)
+    (assoc db :students []))))
 
 (register-handler
   :load-students
@@ -146,8 +148,15 @@
 (register-handler
   :sync-complete
   basic-mw
-  (s/fn [db [res]]
+  (s/fn [db [res records]]
     (print res)
+    (when-not (nil? res)
+      ; update all incidents -> no longer dirty!
+      (merge (:incidents db) (->> records
+        (map (fn [i] 
+          (assoc i :synchronised true)))))
+      (rf/dispatch [:load-students])
+      (rf/dispatch [:load-incidents]))
     (assoc db :sync false)))
 
 (defn sync-records [records]
@@ -157,7 +166,7 @@
     :format (ajax.core/json-request-format)
     :response-format (ajax.core/json-response-format {:keywords? true})
     :params (clj->js records)
-    :handler #(rf/dispatch [:sync-complete %1])
+    :handler #(rf/dispatch [:sync-complete %1 records])
     :error-handler #(rf/dispatch-sync [:bad-response %1])})
 )
 
@@ -166,7 +175,7 @@
   :synchronise
   basic-mw
   (s/fn [db [_]]
-    (ui/alert "Synchronising in background")
+    (ui/alert "Synchronising...")
     (sync-records (let [incidents (:incidents db)]
       (->> incidents
         (filterv #(let []
