@@ -18,9 +18,9 @@
           ; convert date to string objects
           start_time (:start_time value)
           end_time (:end_time value)
-          student (:student value)
+          student (:student_id value)
           updated (-> value
-            (assoc :student (int student))
+            (assoc :student_id (int student))
             (assoc :start_time (.toISOString (new js/Date start_time)))
             (assoc :end_time (.toISOString (new js/Date end_time))))]
             (js/console.log "converted dates to: " (clj->js updated))
@@ -33,8 +33,16 @@
 
 ; See https://github.com/gcanti/tcomb-form-native/blob/master/lib/stylesheets/bootstrap.js
 ; for more you can modify.
-(def text-area-style 
+(def form-style 
   (let [stylesheet (_.cloneDeep s)
+  updated (-> stylesheet
+    (.-controlLabel)
+    (.-normal)
+    (aset "color" "#444444"))]
+    stylesheet))
+    
+(def text-area-style 
+  (let [stylesheet (_.cloneDeep form-style)
         updated (-> stylesheet
                     (.-textbox)
                     (.-normal)
@@ -55,18 +63,21 @@
          (t.enums))))
          
  (def options
-   {:fields {:id {:hidden true}
+   {:stylesheet form-style
+    :fields {:id {:hidden true}
              :description {:stylesheet text-area-style
-                           :multiline true}}})
+                           :multiline true}
+              :student_id {:label "Student"}}})
 
 (defn incident [new?]
   (let [obj {:start_time (t.maybe t.Date)
              :end_time (t.maybe t.Date)
-             :description (t.maybe t.String)
-             :follow_up (t.maybe t.Boolean)
              :summary t.String
-             :student (Student)
-             :location (t.maybe t.String)}]
+             :student_id (Student)
+             :description (t.maybe t.String)
+             :location (t.maybe t.String)
+             :follow_up (t.maybe t.Boolean)
+             :action_taken (t.maybe t.String)}]
     (if-not new?
       (t.struct (clj->js (assoc obj :id t.Number)))
       (t.struct (clj->js obj)))))
@@ -96,10 +107,8 @@
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
                              :type (incident (nil? (:id value)))
-                              :value value
-                              :options options
-                              ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (new js/Date "1995-12-17T03:24:00")) :end_time (clj->js (new js/Date "2995-12-17T03:24:00"))})
-                              ; :value (merge {:student 1 :summary "test" } value {:start_time (clj->js (time/now)) :end_time (clj->js (time/now))})
+                             :value value
+                             :options options
                              :on-change #(r/set-state this {:value (js->clj %1)})}]
                       [ui/button {:on-press    #(on-submit this (r/state this))
                                   :style       (:submit-btn styles)

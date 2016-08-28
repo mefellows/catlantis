@@ -41,14 +41,21 @@
 
 ; TODO: add touchable highlight and click-through
 (defn incident-list [incidents loading?]
-  (when (not-empty incidents)
-    [ui/scroll-view
-     {:style (:listview-container styles)
-      ;:refresh-control refresh-control}
-     }
-     [ui/list-view (merge
-                     {:dataSource    (ds/clone-with-rows list-view-ds incidents)
-                      :render-row    (comp r/as-element render-incident-row u/js->cljk)
-                      :style         (merge-with (:container styles) (:first-item styles))
-                      :render-footer (comp r/as-element (partial footer loading?))}
-                     {})]]))
+  (if (not-empty incidents)
+    (let []
+      [ui/scroll-view
+       {:style (:listview-row styles)
+        ;:refresh-control refresh-control}
+       }
+       [ui/list-view (merge
+                       {:dataSource    (ds/clone-with-rows list-view-ds incidents)
+                        :render-row    (comp r/as-element render-incident-row u/js->cljk)
+                        :style         (merge-with (:container styles) (:first-item styles))
+                        :render-footer (comp r/as-element (partial footer loading?))}
+                       {})]])
+   [ui/scroll-view
+    {:style (:container styles)}
+    [ui/view
+     {:style (:listview-rowcontent styles)}
+     [ui/text {}
+"No incidents huh? You must have a nice school!"]]]))

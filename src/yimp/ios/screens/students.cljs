@@ -6,7 +6,8 @@
             [yimp.ios.components.student-list :refer [student-list]]))
 
 (def students
-  (ui/create-screen :students "Students"
-    (fn []
-      (let [students (rf/subscribe [:students])]
-        [student-list @students]))))
+  (ui/create-screen :students "Incidents"
+    (fn [props]
+      (let [students (rf/subscribe [:students])
+           loading (rf/subscribe [:sync])]
+        [student-list @students @loading]))))

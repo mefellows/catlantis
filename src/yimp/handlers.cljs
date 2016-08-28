@@ -67,12 +67,6 @@
     app-db))
 
 (register-handler
-  :set-students
-  basic-mw
-  (fn [db [value]]
-    (assoc db :students value)))
-
-(register-handler
   :nav/push
   basic-mw
   (s/fn [db [screen-name config]]
@@ -123,6 +117,27 @@
       :error-handler #(rf/dispatch-sync [:bad-response %1])})
    db)) ; <- DAH! Must return the state!!
 
+(register-handler
+ :process-teachers-res
+ (fn
+   ;; store the response of fetching the phones list in the phones attribute of the db
+   [db [_ response]]
+   (print response)
+   (if-not (nil? response)   
+    (assoc db :teachers response)
+    (assoc db :teachers []))))
+
+(register-handler
+  :load-teachers
+  (s/fn [db _]
+    (ajax.core/GET (str (:hostname env) "/teachers")
+     {
+      :response-format :json
+      :keywords? true
+      :handler #(rf/dispatch [:process-teachers-res %1])
+      :error-handler #(rf/dispatch-sync [:bad-response %1])})
+   db)) ; <- DAH! Must return the state!!
+
 ; Fetch a single incident from the local database (does not make API call)
 (register-handler
   :incident-load
@@ -159,6 +174,14 @@
       (rf/dispatch [:load-incidents]))
     (assoc db :sync false)))
 
+(register-handler
+  :sync-fail
+  basic-mw
+  (s/fn [db [res]]
+    (print res)
+    (ui/alert (str "Synchronise failed: " res))
+    (assoc db :sync false)))
+
 (defn sync-records [records]
   (js/console.log "sync records: " (clj->js records))
   (ajax.core/POST (str (:hostname env) "/sync")
@@ -167,7 +190,7 @@
     :response-format (ajax.core/json-response-format {:keywords? true})
     :params (clj->js records)
     :handler #(rf/dispatch [:sync-complete %1 records])
-    :error-handler #(rf/dispatch-sync [:bad-response %1])})
+    :error-handler #(rf/dispatch-sync [:sync-fail %1])})
 )
 
 ; New Handlers
