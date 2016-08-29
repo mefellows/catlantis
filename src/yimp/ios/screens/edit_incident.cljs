@@ -33,22 +33,22 @@
 
 ; See https://github.com/gcanti/tcomb-form-native/blob/master/lib/stylesheets/bootstrap.js
 ; for more you can modify.
-(def form-style 
+(def form-style
   (let [stylesheet (_.cloneDeep s)
   updated (-> stylesheet
     (.-controlLabel)
     (.-normal)
     (aset "color" "#444444"))]
     stylesheet))
-    
-(def text-area-style 
+
+(def text-area-style
   (let [stylesheet (_.cloneDeep form-style)
         updated (-> stylesheet
                     (.-textbox)
                     (.-normal)
                     (aset "height" 150))]
         stylesheet))
-        
+
 (defn extract-student-enum [student]
   (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
 
@@ -61,19 +61,26 @@
          (into {})
          (clj->js)
          (t.enums))))
-         
+
  (def options
    {:stylesheet form-style
     :fields {:id {:hidden true}
              :description {:stylesheet text-area-style
                            :multiline true}
-              :student_id {:label "Student"}}})
+             :student_id {:label "Student"}}})
+
+; (def PersonTest
+;   (let [obj {:name t.String
+;              :tags (t.list t.String)}]
+;       (t.struct (clj->js obj))))
 
 (defn incident [new?]
   (let [obj {:start_time (t.maybe t.Date)
              :end_time (t.maybe t.Date)
              :summary t.String
              :student_id (Student)
+            ;  :students (t.list PersonTest)
+             :students (t.list (Student)) ;<- Just need to fix labels, and the parsing locally and at API
              :description (t.maybe t.String)
              :location (t.maybe t.String)
              :follow_up (t.maybe t.Boolean)
@@ -87,7 +94,7 @@
   {:component
    (r/create-class
      {:component-will-mount
-      (fn [this]        
+      (fn [this]
         (let [incident (rf/subscribe [:current-incident])
               start_time (:start_time @incident)
               end_time (:end_time @incident)
@@ -96,7 +103,7 @@
               (assoc :start_time (js->clj (if (nil? start_time) (new js/Date) (new js/Date start_time))))
               (assoc :end_time (js->clj (if (nil? end_time) (new js/Date) (new js/Date end_time)))))]
           (r/set-state this {:value updated})))
-              
+
       :reagent-render
       (fn [props]
         (this-as this
