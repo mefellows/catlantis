@@ -14,16 +14,17 @@
 
 (defn on-submit [props incident]
   (when (valid-form? props)
+    (js/console.log (clj->js incident))
     (let [value (keywordize-keys (:value incident))
-          ; convert date to string objects
           start_time (:start_time value)
           end_time (:end_time value)
-          student (:student_id value)
+          students (into [] (map #(int %1) (:students value)))
           updated (-> value
-            (assoc :student_id (int student))
+            (assoc :students students)
             (assoc :start_time (.toISOString (new js/Date start_time)))
             (assoc :end_time (.toISOString (new js/Date end_time))))]
-            (js/console.log "converted dates to: " (clj->js updated))
+            (js/console.log "converted incident object to: " (clj->js updated))
+            (print "converted incident object to: " updated)
       (rf/dispatch [:save-incident updated]))))
 
 (def t (js/require "tcomb-form-native"))
@@ -66,8 +67,7 @@
    {:stylesheet form-style
     :fields {:id {:hidden true}
              :description {:stylesheet text-area-style
-                           :multiline true}
-             :student_id {:label "Student"}}})
+                           :multiline true}}})
 
 ; (def PersonTest
 ;   (let [obj {:name t.String
@@ -78,7 +78,7 @@
   (let [obj {:start_time (t.maybe t.Date)
              :end_time (t.maybe t.Date)
              :summary t.String
-             :student_id (Student)
+            ;  :student_id (Student)
             ;  :students (t.list PersonTest)
              :students (t.list (Student)) ;<- Just need to fix labels, and the parsing locally and at API
              :description (t.maybe t.String)
@@ -98,10 +98,13 @@
         (let [incident (rf/subscribe [:current-incident])
               start_time (:start_time @incident)
               end_time (:end_time @incident)
-          ; Convert string to Date objects
+              students (:students @incident)
+          ; Convert string to Date objects, and extract student id's
           updated (-> @incident
+              (assoc :students (into [] (map #(:id %1) students)))
               (assoc :start_time (js->clj (if (nil? start_time) (new js/Date) (new js/Date start_time))))
               (assoc :end_time (js->clj (if (nil? end_time) (new js/Date) (new js/Date end_time)))))]
+              (print "Students: " students)
           (r/set-state this {:value updated})))
 
       :reagent-render
