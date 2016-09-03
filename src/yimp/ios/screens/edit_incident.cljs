@@ -18,7 +18,7 @@
     (let [value (keywordize-keys (:value incident))
           start_time (:start_time value)
           end_time (:end_time value)
-          students (into [] (map #(int %1) (:students value)))
+          students (into [] (map (fn [i] {:id (int i)}) (:students value)))
           updated (-> value
             (assoc :students students)
             (assoc :start_time (.toISOString (new js/Date start_time)))
