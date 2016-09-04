@@ -34,9 +34,11 @@
              :incident-query   IncidentQuery
              :user              (s/maybe User)
              :students          [s/Any]
+             :classrooms        [s/Any]
              :incidents         [s/Any]
              :current-incident  s/Any
              :current-student   s/Any
+             :current-classroom s/Any
              :teachers          [Teacher]
              :sync              s/Bool
              :current-page      s/Keyword})
@@ -49,8 +51,10 @@
                         :loading? false}
    :teachers           []
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
+   :classrooms         [{:id 1 :first_name "Matt" :last_name "foo"},{:id 2 :first_name "Matt" :last_name "foo"}]
    :current-incident   nil
    :current-student    nil
+   :current-classroom    nil
    :incidents          []
    :user               {:username "test"}
    :current-page       :incidents})

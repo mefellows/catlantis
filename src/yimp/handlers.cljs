@@ -39,6 +39,19 @@
 
 (def basic-mw [#_mid/debug mid/trim-v validate-schema-mw])
 
+(defn find-classroom "Finds a classroom in the given db by id" [db id]
+  (let [classrooms (:classrooms db)
+    classroom (first
+               (->> classrooms
+                    (filter
+                      (fn [classroom]
+                        (= (:id classroom) id)))))]
+    (if-not (nil? classroom)
+      (let []
+        (rf/dispatch [:nav/push :edit-classroom])
+        (assoc db :current-classroom classroom))
+      nil)))
+
 (defn find-student "Finds a student in the given db by id" [db id]
   (let [students (:students db)
     student (first

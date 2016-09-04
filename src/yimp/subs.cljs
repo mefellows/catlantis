@@ -24,11 +24,23 @@
    ;; extracts the incidents property from the db
    (reaction (:incidents @db))))  ;; pulls out :incidents
 
+(register-sub        ;; a new subscription handler
+ :classrooms             ;; usage (subscribe [:classrooms])
+ (fn [db]
+   ;; extracts the classrooms property from the db
+   (reaction (:classrooms @db))))  ;; pulls out :classrooms
+
 (register-sub
   :current-page
   (fn [db _]
     (reaction
       (:current-page @db))))
+
+(register-sub
+  :current-classroom
+  (fn [db _]
+    (reaction
+      (:current-classroom @db))))
 
 (register-sub
   :menu-selected
