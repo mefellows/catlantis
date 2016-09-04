@@ -1,4 +1,4 @@
-(ns yimp.ios.screens.edit-incident
+(ns yimp.ios.screens.edit-student
   (:require [re-frame.core :as rf]
             [reagent.core :as r]
             [clojure.walk :refer [keywordize-keys]]
@@ -12,19 +12,18 @@
                                          (aget "form")))]
   (empty? (js->clj (aget validation-result "errors")))))
 
-(defn on-submit [props incident]
+(defn on-submit [props student]
   (when (valid-form? props)
-    (js/console.log (clj->js incident))
-    (let [value (keywordize-keys (:value incident))
-          start_time (:start_time value)
+    (js/console.log (clj->js student))
+    (let [value (keywordize-keys (:value student))
+          date_of_birth (:date_of_birth value)
           end_time (:end_time value)
           students (into [] (map (fn [i] {:id (int i)}) (:students value)))
           updated (-> value
             (assoc :students students)
-            (assoc :start_time (.toISOString (new js/Date start_time)))
-            (assoc :end_time (.toISOString (new js/Date end_time))))]
-            (js/console.log "converted incident object to: " (clj->js updated))
-      (rf/dispatch [:save-incident updated]))))
+            (assoc :date_of_birth (.toISOString (new js/Date date_of_birth))))]
+            (js/console.log "converted student object to: " (clj->js updated))
+      (rf/dispatch [:save-student updated]))))
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
@@ -64,41 +63,33 @@
 
  (def options
    {:stylesheet form-style
-    :order [:start_time :end_time :summary :location :description :students  :action_taken :follow_up ]
+    :order [:first_name :last_name :date_of_birth]
+    :editable false
     :fields {:id {:hidden true}
-             :students {:item {:label " "}}
-             :description {:stylesheet text-area-style
-                           :multiline true}}})
+             :date_of_birth {:editable false}
+             :first_name {:editable false}
+             :last_name {:editable false}}})
 
-(defn incident [new?]
-  (let [obj {:start_time t.Date
-             :end_time t.Date
-             :summary t.String
-             :students (t.list (Student))
-             :description (t.maybe t.String)
-             :location t.String
-             :follow_up (t.maybe t.Boolean)
-             :action_taken (t.maybe t.String)}]
+(defn student [new?]
+  (let [obj {:date_of_birth t.Date
+             :first_name t.String
+             :last_name t.String}]
     (if-not new?
       (t.struct (clj->js (assoc obj :id t.Number)))
       (t.struct (clj->js obj)))))
 
 ; TODO: Move state into GLOBAL app state, not confined to component
-(def edit-incident
+(def edit-student
   {:component
    (r/create-class
      {:component-will-mount
       (fn [this]
-        (let [incident (rf/subscribe [:current-incident])
-              start_time (:start_time @incident)
-              end_time (:end_time @incident)
-              students (:students @incident)
-          ; Convert string to Date objects, and extract student id's
-          updated (-> @incident
-              (assoc :students (into [] (map #(:id %1) students)))
-              (assoc :start_time (js->clj (if (nil? start_time) (new js/Date) (new js/Date start_time))))
-              (assoc :end_time (js->clj (if (nil? end_time) (new js/Date) (new js/Date end_time)))))]
-          (r/set-state this {:value updated})))
+        (let [student (rf/subscribe [:current-student])
+              date_of_birth (:date_of_birth @student)
+              ; Convert string to Date objects, and extract student id's
+              updated (-> @student
+                  (assoc :date_of_birth (js->clj (if (nil? date_of_birth) (new js/Date) (new js/Date date_of_birth)))))]
+              (r/set-state this {:value updated})))
 
       :reagent-render
       (fn [props]
@@ -109,7 +100,7 @@
                      [ui/scroll-view
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
-                             :type (incident (nil? (:id value)))
+                             :type (student (nil? (:id value)))
                              :value value
                              :options options
                              :on-change #(r/set-state this {:value (js->clj %1)})}]
@@ -119,9 +110,9 @@
                                   :is-disabled #(not (valid-form? props))}
                        "Submit"]]])))})
    :config
-   {:screen            :edit-incident
+   {:screen            :edit-student
     :screen-type       :screen
-    :title             "Create/Edit Incident"
+    :title             "Student"
     :navigator-buttons {:left-buttons
                           [{:icon (js/require "./images/ic_chevron_left.png")
                             :id   :back}]}}

@@ -10,5 +10,6 @@
    :api-key thecatapi-key})
 
 (def env
-  ; {:hostname "http://yimp.herokuapp.com"})
-  {:hostname "http://localhost:3000"})
+  ;{:hostname "http://yimp.herokuapp.com"}
+ {:hostname "http://localhost:3000"
+  :school-id 1})

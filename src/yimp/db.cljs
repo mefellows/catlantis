@@ -36,6 +36,7 @@
              :students          [s/Any]
              :incidents         [s/Any]
              :current-incident  s/Any
+             :current-student   s/Any
              :teachers          [Teacher]
              :sync              s/Bool
              :current-page      s/Keyword})
@@ -49,6 +50,7 @@
    :teachers           []
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
    :current-incident   nil
+   :current-student    nil
    :incidents          []
    :user               {:username "test"}
    :current-page       :incidents})

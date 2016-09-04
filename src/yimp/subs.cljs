@@ -62,6 +62,12 @@
       (:current-incident @db))))
 
 (register-sub
+  :current-student
+  (fn [db _]
+    (reaction
+      (:current-student @db))))
+
+(register-sub
   :sync
   (fn [db _]
     (reaction

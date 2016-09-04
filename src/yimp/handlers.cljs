@@ -39,7 +39,19 @@
 
 (def basic-mw [#_mid/debug mid/trim-v validate-schema-mw])
 
-
+(defn find-student "Finds a student in the given db by id" [db id]
+  (let [students (:students db)
+    student (first
+               (->> students
+                    (filter
+                      (fn [student]
+                        (= (:id student) id)))))]
+    (if-not (nil? student)
+      (let []
+        (rf/dispatch [:nav/push :edit-student])
+        (assoc db :current-student student))
+      nil)))
+      
 (defn find-incident "Finds an incident in the given db by id" [db id]
   (let [incidents (:incidents db)
     incident (first
@@ -144,6 +156,13 @@
   basic-mw
   (s/fn [db [id]]
     (find-incident db id)))
+    
+; Fetch a single student from the local database (does not make API call)
+(register-handler
+  :student-load
+  basic-mw
+  (s/fn [db [id]]
+    (find-student db id)))
 
 (register-handler
   :incident-res

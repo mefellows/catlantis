@@ -12,7 +12,6 @@
 (def list-view-ds (ds/data-source {:rowHasChanged #(not= %1 %2)}))
 
 (defn submit [id]
-  (print "selected: " id )
   (rf/dispatch [:student-load id] ))
 
 (defn render-student-row [{:keys [first_name last_name id] :as student}]
