@@ -28,7 +28,8 @@
                  (let [{:keys [value]} (r/state this)
                        student (rf/subscribe [:current-student])
                        incidents (rf/subscribe [:current-student-incidents])
-                       loading (rf/subscribe [:sync])]
+                       loading (rf/subscribe [:sync])
+                       date (new js/Date (:date_of_birth @student))]
                        [ui/scroll-view {:style (:first-item styles)}
                          [ui/view {:style (:readonly-form styles)}
                            [ui/view {:style (:readonly-container styles)}
@@ -40,7 +41,7 @@
                             [ui/text {:style (:readonly-label styles)}
                                "Date of birth"]
                             [ui/text {:style (:readonly-value styles)}
-                               (:date_of_birth @student)]]
+                               (.toLocaleDateString date "en-GB")]]
                            [ui/view {:style (:readonly-container styles)}
                             [ui/text {:style (:readonly-label styles)}
                                "Classroom"]
