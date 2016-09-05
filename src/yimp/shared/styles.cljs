@@ -64,8 +64,15 @@
      :listview-rowcontent {:flex 9
                            :flex-direction :row
                            :align-items :center
-                           :padding-left 20
-}
+                           :padding-left 20}
+     :listview-rowcontent-inner {:flex 9
+                           :flex-direction :row
+                           :align-items :center
+                           :padding-left 20}
+     :listview-rowcontent-attribute {:font-size 10
+                             :color "#666666"
+                             :flex 1
+                             :flex-direction :row}
      :listview-rowaction  {:flex 1
                            :flex-direction :row
                            :align-items :center}

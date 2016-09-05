@@ -16,16 +16,19 @@
   (rf/dispatch [:incident-load id] ))
 
 (defn render-incident-row [{:keys [summary id] :as incident}]
-  [ui/touchable-highlight {:style       (:listview-row styles)
-                           :on-press    #(submit id)
-                           :underlay-color "#efefef"
-                           :active-opacity .9}
-    [ui/view {:style       (:listview-row styles)}
-      [ui/view {:style (:listview-rowcontent styles)}
-          [ui/text {}
-            summary]]
-      [ui/view {:style (:listview-rowaction styles)}
-        [ui/text {} " > "]]]])
+  (let [date (new js/Date (:start_time incident))]
+    [ui/touchable-highlight {:style       (:listview-row styles)
+                             :on-press    #(submit id)
+                             :underlay-color "#efefef"
+                             :active-opacity .9}
+      [ui/view {:style       (:listview-row styles)}
+        [ui/view {:style (:listview-rowcontent styles)}
+            [ui/text {:style (:listview-rowcontent-attribute styles)}
+                (str (.getUTCDate date) "/" (.getUTCMonth date) " " (.getUTCFullYear date))]
+            [ui/text {:style (:listview-rowcontent-inner styles)}
+              summary]]
+        [ui/view {:style (:listview-rowaction styles)}
+          [ui/text {} " > "]]]]))
 
 (defn footer [loading?]
   (when loading?
