@@ -22,7 +22,7 @@
     [ui/view {:style       (:listview-row styles)}
       [ui/view {:style (:listview-rowcontent styles)}
           [ui/text {}
-            (str first_name last_name)]]
+            (str first_name " " last_name)]]
       [ui/view {:style (:listview-rowaction styles)}
         [ui/text {} " > "]]]])
 

@@ -11,12 +11,41 @@
                       :background-color "#ffffff"
                       :backface-visibility "hidden"}
      :list-item      {:flex 0}
-     :list-item-text {:text-align :center
+     :list-item-text {:text-align :left
                       :color (ui/color :black)}
      :title          {:text-align     :center
                       :padding-bottom 20
                       :font-size      20
                       :font-weight    "500"}
+                      
+    ; read only form elements
+    :readonly-section-title {:color (ui/color :orange800)
+                             :font-weight "500"
+                             :padding-left 20
+                            ;  :height "10%"
+                             :padding-top 20
+                             :padding-bottom 10
+                             :flex 1
+                     }
+    :readonly-form   {:border-bottom-color "#efefef"
+                      :border-bottom-width 1}
+    :readonly-container {:flex 1
+                      :padding-top 10
+                      :padding-bottom 10}
+     :readonly-label {:flex 1
+                      :width     "100%"
+                      :align-items :center
+                      :flex-direction :row
+                      :padding-left 20 }
+     :readonly-value {:flex 1
+                      :width     "100%"
+                      ; :height     "10%"
+                      :align-items :center
+                      :flex-direction :row
+                      :padding-left 20
+                      :padding-top 5
+                      :color "#666666"}
+
 
      ; List View elements
      :listview-container  {:flex             1

@@ -34,11 +34,6 @@
      [ui/activity-indicator-ios
       {:style (:indicator styles)}]]))
 
-; (def refresh-control
-;   (r/as-element [ui/refresh-control {:refreshing #(true)
-;                                      :on-refresh #(print "refreshing on refresh")
-;                                      :title "Loading incidents..."}]))
-
 ; TODO: add touchable highlight and click-through
 (defn incident-list [incidents loading?]
   (if (not-empty incidents)
@@ -46,7 +41,7 @@
        [ui/list-view (merge
                        {:dataSource    (ds/clone-with-rows list-view-ds incidents)
                         :render-row    (comp r/as-element render-incident-row u/js->cljk)
-                        :style         (merge-with (:container styles) (:first-item styles))
+                        :style         (merge-with (:container styles) {})
                         :render-footer (comp r/as-element (partial footer loading?))}
                        {})])
    [ui/scroll-view
@@ -58,5 +53,5 @@
 
 (defn incident-list-view [incidents loading?]
   (let []
-    [ui/scroll-view {:style (:listview-row styles)}
+    [ui/scroll-view {:style (merge-with (:listview-row styles) (:first-item styles))}
     [incident-list incidents loading?]]))

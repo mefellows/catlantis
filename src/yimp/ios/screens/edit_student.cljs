@@ -9,85 +9,6 @@
             [yimp.shared.ui :as ui]
             [yimp.ios.components.incident-list :refer [incident-list render-incident-row list-view-ds footer]]))
 
-; (def incidents
-;   (ui/create-screen :incidents "Incidents"
-;     (fn [props]
-;       (let [incidents (rf/subscribe [:incidents])
-;            loading (rf/subscribe [:sync])]
-;         [incident-list @incidents @loading]))))
-
-(defn valid-form? [props]
-  (let [validation-result (.validate (-> props
-                                         (aget "refs")
-                                         (aget "form")))]
-  (empty? (js->clj (aget validation-result "errors")))))
-
-(defn on-submit [props student]
-  (when (valid-form? props)
-    (js/console.log (clj->js student))
-    (let [value (keywordize-keys (:value student))
-          date_of_birth (:date_of_birth value)
-          end_time (:end_time value)
-          students (into [] (map (fn [i] {:id (int i)}) (:students value)))
-          updated (-> value
-            (assoc :students students)
-            (assoc :date_of_birth (.toISOString (new js/Date date_of_birth))))]
-            (js/console.log "converted student object to: " (clj->js updated))
-      (rf/dispatch [:save-student updated]))))
-
-(def t (js/require "tcomb-form-native"))
-(def Form (r/adapt-react-class (.-Form t.form)))
-(def s (.-stylesheet (.-Form t.form)))
-(def _ (js/require "lodash"))
-
-; See https://github.com/gcanti/tcomb-form-native/blob/master/lib/stylesheets/bootstrap.js
-; for more you can modify.
-(def form-style
-  (let [stylesheet (_.cloneDeep s)
-  updated (-> stylesheet
-    (.-controlLabel)
-    (.-normal)
-    (aset "color" "#444444"))]
-    stylesheet))
-
-(def text-area-style
-  (let [stylesheet (_.cloneDeep form-style)
-        updated (-> stylesheet
-                    (.-textbox)
-                    (.-normal)
-                    (aset "height" 150))]
-        stylesheet))
-
-(defn extract-student-enum [student]
-  (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
-
-(defn Student []
-  (let [students (rf/subscribe [:students])]
-    (->> @students
-         (filter #(let [] (> (:id %1) 0)))
-         (mapv extract-student-enum)
-         (flatten)
-         (into {})
-         (clj->js)
-         (t.enums))))
-
- (def options
-   {:stylesheet form-style
-    :order [:first_name :last_name :date_of_birth]
-    :editable false
-    :fields {:id {:hidden true}
-             :date_of_birth {:editable false}
-             :first_name {:editable false}
-             :last_name {:editable false}}})
-
-(defn student [new?]
-  (let [obj {:date_of_birth t.Date
-             :first_name t.String
-             :last_name t.String}]
-    (if-not new?
-      (t.struct (clj->js (assoc obj :id t.Number)))
-      (t.struct (clj->js obj)))))
-
 ; TODO: Move state into GLOBAL app state, not confined to component
 (def edit-student
   {:component
@@ -105,39 +26,29 @@
       (fn [props]
         (this-as this
                  (let [{:keys [value]} (r/state this)
+                       student (rf/subscribe [:current-student])
                        incidents (rf/subscribe [:current-student-incidents])
                        loading (rf/subscribe [:sync])]
-                       (js/console.log "Updated model: " (clj->js value))
-                       (js/console.log "incidents for student: " (clj->js @incidents))
-                    ;  [ui/scroll-view {:style (:first-item styles)}
-                     [ui/scroll-view {:style (:listview-row styles)}
-                     [ui/view {:style (:listview-rowcontent styles)}
-                         [ui/text {}
-                           "some text"]]
-                      ; [ui/text {} "incident header!"]
-                      ;  [ui/list-view (merge
-                      ;                  {:dataSource    (ds/clone-with-rows list-view-ds @incidents)
-                      ;                   :render-row    (comp r/as-element render-incident-row u/js->cljk)
-                      ;                   :style         (merge-with (:container styles) (:first-item styles))
-                      ;                   :render-footer (comp r/as-element (partial footer false))}
-                      ;                  {})]]
-                    ;   {:style (:scroll-container styles)}
-                    ;   [Form {:ref "form"
-                    ;          :type (student (nil? (:id value)))
-                    ;          :value value
-                    ;          :options options
-                    ;          :on-change #(r/set-state this {:value (js->clj %1)})}]
-                    ;   [ui/button {:on-press    #(on-submit this (r/state this))
-                    ;               :style       (:submit-btn styles)
-                    ;               :text-style  (:submit-btn-text styles)
-                    ;               :is-disabled #(not (valid-form? props))}
-                    ;    "Submit"]
-                    ;    ]]
-                      ;  [ui/view
-                        ; [ui/text {} "Incidents!"]
-                          [incident-list @incidents @loading]]
-
-                       )))})
+                       [ui/scroll-view {:style (:first-item styles)}
+                         [ui/view {:style (:readonly-form styles)}
+                           [ui/view {:style (:readonly-container styles)}
+                            [ui/text {:style (:readonly-label styles)}
+                               "Name"]
+                            [ui/text {:style (:readonly-value styles)}
+                               (str (:first_name @student) " " (:last_name @student))]]
+                           [ui/view {:style (:readonly-container styles)}
+                            [ui/text {:style (:readonly-label styles)}
+                               "Date of birth"]
+                            [ui/text {:style (:readonly-value styles)}
+                               (:date_of_birth @student)]]
+                           [ui/view {:style (:readonly-container styles)}
+                            [ui/text {:style (:readonly-label styles)}
+                               "Classroom"]
+                            [ui/text {:style (:readonly-value styles)}
+                               "5/6M"]]
+                            [ui/text {:style (:readonly-section-title styles)}
+                               "Incidents"]]
+                            [incident-list @incidents @loading]])))})
    :config
    {:screen            :edit-student
     :screen-type       :screen
