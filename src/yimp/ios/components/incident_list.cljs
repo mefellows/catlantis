@@ -43,19 +43,20 @@
 (defn incident-list [incidents loading?]
   (if (not-empty incidents)
     (let []
-      [ui/scroll-view
-       {:style (:listview-row styles)
-        ;:refresh-control refresh-control}
-       }
        [ui/list-view (merge
                        {:dataSource    (ds/clone-with-rows list-view-ds incidents)
                         :render-row    (comp r/as-element render-incident-row u/js->cljk)
                         :style         (merge-with (:container styles) (:first-item styles))
                         :render-footer (comp r/as-element (partial footer loading?))}
-                       {})]])
+                       {})])
    [ui/scroll-view
     {:style (:container styles)}
     [ui/view
      {:style (:listview-rowcontent styles)}
      [ui/text {}
 "No incidents huh? You must have a nice school!"]]]))
+
+(defn incident-list-view [incidents loading?]
+  (let []
+    [ui/scroll-view {:style (:listview-row styles)}
+    [incident-list incidents loading?]]))

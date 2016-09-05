@@ -11,7 +11,13 @@
  (fn [db]
    ;; extracts the students property from the db
    (reaction (:students @db))))  ;; pulls out :students
-   
+
+(register-sub        ;; a new subscription handler
+ :current-student-incidents             ;; usage (subscribe [::current-student-incidents])
+ (fn [db]
+   ;; extracts the :current-student-incidents property from the db
+   (reaction (:current-student-incidents @db))))  ;; pulls out :students
+
 (register-sub        ;; a new subscription handler
  :teachers             ;; usage (subscribe [:teachers])
  (fn [db]

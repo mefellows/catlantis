@@ -1,10 +1,20 @@
 (ns yimp.ios.screens.edit-student
+  (:require-macros [natal-shell.data-source :as ds])
   (:require [re-frame.core :as rf]
             [reagent.core :as r]
+            [yimp.utils :as u]
             [clojure.walk :refer [keywordize-keys]]
             [yimp.shared.styles :refer [styles]]
             [clojure.string :as str]
-            [yimp.shared.ui :as ui]))
+            [yimp.shared.ui :as ui]
+            [yimp.ios.components.incident-list :refer [incident-list render-incident-row list-view-ds footer]]))
+
+; (def incidents
+;   (ui/create-screen :incidents "Incidents"
+;     (fn [props]
+;       (let [incidents (rf/subscribe [:incidents])
+;            loading (rf/subscribe [:sync])]
+;         [incident-list @incidents @loading]))))
 
 (defn valid-form? [props]
   (let [validation-result (.validate (-> props
@@ -94,21 +104,40 @@
       :reagent-render
       (fn [props]
         (this-as this
-                 (let [{:keys [value]} (r/state this)]
-                 (js/console.log "Updated model: " (clj->js value))
-                    [ui/view {:style (:form-container styles)}
-                     [ui/scroll-view
-                      {:style (:scroll-container styles)}
-                      [Form {:ref "form"
-                             :type (student (nil? (:id value)))
-                             :value value
-                             :options options
-                             :on-change #(r/set-state this {:value (js->clj %1)})}]
-                      [ui/button {:on-press    #(on-submit this (r/state this))
-                                  :style       (:submit-btn styles)
-                                  :text-style  (:submit-btn-text styles)
-                                  :is-disabled #(not (valid-form? props))}
-                       "Submit"]]])))})
+                 (let [{:keys [value]} (r/state this)
+                       incidents (rf/subscribe [:current-student-incidents])
+                       loading (rf/subscribe [:sync])]
+                       (js/console.log "Updated model: " (clj->js value))
+                       (js/console.log "incidents for student: " (clj->js @incidents))
+                    ;  [ui/scroll-view {:style (:first-item styles)}
+                     [ui/scroll-view {:style (:listview-row styles)}
+                     [ui/view {:style (:listview-rowcontent styles)}
+                         [ui/text {}
+                           "some text"]]
+                      ; [ui/text {} "incident header!"]
+                      ;  [ui/list-view (merge
+                      ;                  {:dataSource    (ds/clone-with-rows list-view-ds @incidents)
+                      ;                   :render-row    (comp r/as-element render-incident-row u/js->cljk)
+                      ;                   :style         (merge-with (:container styles) (:first-item styles))
+                      ;                   :render-footer (comp r/as-element (partial footer false))}
+                      ;                  {})]]
+                    ;   {:style (:scroll-container styles)}
+                    ;   [Form {:ref "form"
+                    ;          :type (student (nil? (:id value)))
+                    ;          :value value
+                    ;          :options options
+                    ;          :on-change #(r/set-state this {:value (js->clj %1)})}]
+                    ;   [ui/button {:on-press    #(on-submit this (r/state this))
+                    ;               :style       (:submit-btn styles)
+                    ;               :text-style  (:submit-btn-text styles)
+                    ;               :is-disabled #(not (valid-form? props))}
+                    ;    "Submit"]
+                    ;    ]]
+                      ;  [ui/view
+                        ; [ui/text {} "Incidents!"]
+                          [incident-list @incidents @loading]]
+
+                       )))})
    :config
    {:screen            :edit-student
     :screen-type       :screen

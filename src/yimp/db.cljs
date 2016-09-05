@@ -37,7 +37,8 @@
              :classrooms        [s/Any]
              :incidents         [s/Any]
              :current-incident  s/Any
-             :current-student   s/Any
+             :current-student   s/Any ;TODO: fold this into current student!
+             :current-student-incidents   s/Any
              :current-classroom s/Any
              :teachers          [Teacher]
              :sync              s/Bool
@@ -54,6 +55,7 @@
    :classrooms         [{:id 1 :first_name "Matt" :last_name "foo"},{:id 2 :first_name "Matt" :last_name "foo"}]
    :current-incident   nil
    :current-student    nil
+   :current-student-incidents []
    :current-classroom    nil
    :incidents          []
    :user               {:username "test"}

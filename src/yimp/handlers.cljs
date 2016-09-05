@@ -11,7 +11,7 @@
     [ajax.core :refer [GET]]
     [yimp.config :as cfg]
     [clojure.string :as str]
-    [yimp.api :as api]    
+    [yimp.api :as api]
     [re-frame.core :as rf]))
 
 (enable-console-print!)
@@ -54,17 +54,29 @@
 
 (defn find-student "Finds a student in the given db by id" [db id]
   (let [students (:students db)
-    student (first
-               (->> students
-                    (filter
-                      (fn [student]
-                        (= (:id student) id)))))]
-    (if-not (nil? student)
-      (let []
-        (rf/dispatch [:nav/push :edit-student])
-        (assoc db :current-student student))
-      nil)))
-      
+        incidents (:incidents db)
+        student-incidents (->> incidents
+                               (filter
+                                 (fn [incident]
+                                   ; return true where student in (:students incident)
+                                   (not (empty? (->> (:students incident)
+                                                    (filter
+                                                      (fn [student]
+                                                        (= (:id student) id)))))))))
+
+        student (first
+                   (->> students
+                        (filter
+                          (fn [student]
+                            (= (:id student) id)))))]
+        (if-not (nil? student)
+          (let []
+            (rf/dispatch [:nav/push :edit-student])
+            (-> db
+              (assoc :current-student-incidents student-incidents)
+              (assoc :current-student student)))
+          nil)))
+
 (defn find-incident "Finds an incident in the given db by id" [db id]
   (let [incidents (:incidents db)
     incident (first
@@ -84,6 +96,13 @@
       incidents
       (mapv #(let []
         (if (= (:id %1) (:id incident)) incident %))))))
+
+; (defn find-incidents-for-student "Finds all incidents for a given student" [db id]
+;   (let [incidents (:incidents db)]
+;       (let []
+        ; (rf/dispatch [:nav/push :edit-incident])
+;         (assoc db :current-incidents-for-student incidents))
+;       nil)))
 
 (register-handler
   :initialize-db
@@ -127,7 +146,7 @@
    ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
    (print response)
-   (if-not (nil? response)   
+   (if-not (nil? response)
     (assoc db :students response)
     (assoc db :students []))))
 
@@ -148,7 +167,7 @@
    ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
    (print response)
-   (if-not (nil? response)   
+   (if-not (nil? response)
     (assoc db :teachers response)
     (assoc db :teachers []))))
 
@@ -169,7 +188,7 @@
   basic-mw
   (s/fn [db [id]]
     (find-incident db id)))
-    
+
 ; Fetch a single student from the local database (does not make API call)
 (register-handler
   :student-load
@@ -200,7 +219,7 @@
     (when-not (nil? res)
       ; update all incidents -> no longer dirty!
       (merge (:incidents db) (->> records
-        (map (fn [i] 
+        (map (fn [i]
           (assoc i :synchronised true)))))
       (rf/dispatch [:load-students])
       (rf/dispatch [:load-incidents]))
