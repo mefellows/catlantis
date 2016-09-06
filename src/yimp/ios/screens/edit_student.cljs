@@ -39,9 +39,9 @@
                                (str (:first_name @student) " " (:last_name @student))]]
                            [ui/view {:style (:readonly-container styles)}
                             [ui/text {:style (:readonly-label styles)}
-                               "Date of birth"]
+                               "Gender"]
                             [ui/text {:style (:readonly-value styles)}
-                               (.toLocaleDateString date "en-GB")]]
+                               (:gender @student)]]
                            [ui/view {:style (:readonly-container styles)}
                             [ui/text {:style (:readonly-label styles)}
                                "Classroom"]
