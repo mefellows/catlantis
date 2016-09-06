@@ -15,12 +15,7 @@
    (r/create-class
      {:component-will-mount
       (fn [this]
-        (let [student (rf/subscribe [:current-student])
-              date_of_birth (:date_of_birth @student)
-              ; Convert string to Date objects, and extract student id's
-              updated (-> @student
-                  (assoc :date_of_birth (js->clj (if (nil? date_of_birth) (new js/Date) (new js/Date date_of_birth)))))]
-              (r/set-state this {:value updated})))
+        (let [student (rf/subscribe [:current-student])]))
 
       :reagent-render
       (fn [props]

@@ -10,4 +10,4 @@
     (fn [props]
       (let [students (rf/subscribe [:students])
            loading (rf/subscribe [:sync])]
-        [student-list @students @loading]))))
+        [student-list (sort-by :first_name @students) @loading]))))
