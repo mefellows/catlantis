@@ -16,7 +16,7 @@
 
 (def menu-options
   [{:id "incidents" :name "Incidents"}
-   {:id "classrooms" :name "Classrooms"}
+  ;  {:id "classrooms" :name "Classrooms"}
    {:id "students" :name "Students"}])
 
 (defn menu []
