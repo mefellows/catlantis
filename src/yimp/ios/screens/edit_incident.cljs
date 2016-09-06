@@ -66,7 +66,8 @@
    {:stylesheet form-style
     :order [:start_time :end_time :summary :location :description :students  :action_taken :follow_up ]
     :fields {:id {:hidden true}
-             :students {:item {:label " "}}
+             :students {:item {:label " "
+                               :order "asc"}}
              :description {:stylesheet text-area-style
                            :multiline true}}})
 
