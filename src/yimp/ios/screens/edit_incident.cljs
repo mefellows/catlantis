@@ -92,11 +92,16 @@
       (fn [this]
         (let [incident (rf/subscribe [:current-incident])
               start_time (:start_time @incident)
-              end_time (:end_time @incident)
-              students (:students @incident)
+              end_time   (:end_time @incident)
+              students   (:students @incident)
+              id         (:id @incident)
+              local_id   (:local_id @incident)
           ; Convert string to Date objects, and extract student id's
           updated (-> @incident
               (assoc :students (into [] (map #(:id %1) students)))
+              (assoc :local_id (if (and (nil? id) (nil? local_id))
+                                    (.now js/Date)
+                                    (if-not (nil? local_id) local_id id)))
               (assoc :start_time (js->clj (if (nil? start_time) (new js/Date) (new js/Date start_time))))
               (assoc :end_time (js->clj (if (nil? end_time) (new js/Date) (new js/Date end_time)))))]
           (r/set-state this {:value updated})))

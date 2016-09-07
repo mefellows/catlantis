@@ -90,19 +90,12 @@
         (assoc db :current-incident incident))
       nil)))
 
-(defn update-incident "Finds and updates an incident in the db" [db incident]
+(defn update-incident "Finds and updates an incident in the db (uses local-id)" [db incident]
   (let [incidents (:incidents db)]
     (->>
       incidents
       (mapv #(let []
-        (if (= (:id %1) (:id incident)) incident %))))))
-
-; (defn find-incidents-for-student "Finds all incidents for a given student" [db id]
-;   (let [incidents (:incidents db)]
-;       (let []
-        ; (rf/dispatch [:nav/push :edit-incident])
-;         (assoc db :current-incidents-for-student incidents))
-;       nil)))
+        (if (= (:local_id %1) (:local_id incident)) incident %))))))
 
 (register-handler
   :initialize-db
@@ -287,7 +280,14 @@
       (rf/dispatch [:nav/push :edit-incident])
       (assoc db :current-incident {})))
 
- ; NOTE: handle updates -> currently only adds new.
+(defn get-incident-by-local-id "Finds an incident in the db by its local-id" [db local-id]
+  (let [incidents (:incidents db)]
+    (first (->>
+      incidents
+      (filter #(let []
+        (= (:local_id %1) local-id)))))))
+
+ ; NOTE: handle updates to unsynced records -> currently only adds new.
  (register-handler
    :save-incident
    basic-mw
@@ -295,17 +295,18 @@
      (print "Saving local incident: " incident)
      (let [incidents (:incidents db)
            id (:id incident)
+           local-id (:local_id incident)
            updated-incident (assoc incident :synchronised false)]
-       (if-not (nil? id)
+       (if (nil? (get-incident-by-local-id db local-id))
          (let []
-           ; find and update an incident
-           (print "UPDATING")
-            (->> updated-incident
-                 (update-incident db)
-                 (assoc db :incidents)))
-         (let []
-           ; find and update an incident
-           (print "INSERTING")
+           ; Add a new incident locally.
+           (print "INSERTING a new incident")
            (->> updated-incident
              (conj incidents)
-             (assoc db :incidents)))))))
+             (assoc db :incidents)))
+           (let []
+             ; find and update an existing incident
+             (print "UPDATING an existing incident")
+              (->> updated-incident
+                   (update-incident db)
+                   (assoc db :incidents)))))))
