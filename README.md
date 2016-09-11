@@ -38,3 +38,15 @@ Copy image to `./images`. Be sure to add 2x and 3x versions (note the `@2x.png` 
 1. Restart React Package Manager
 2. Run `re-natil use-figwheel` to update deps
 3. `lein figwheel ios` to keep developing
+
+## Publish to App Store
+
+### TestFlight
+
+```
+fastlane beta
+```
+
+### App Store
+
+TBC
