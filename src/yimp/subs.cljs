@@ -19,6 +19,12 @@
    (reaction (:current-student-incidents @db))))  ;; pulls out :students
 
 (register-sub        ;; a new subscription handler
+ :current-student-classroom             ;; usage (subscribe [::current-student-classroom])
+ (fn [db]
+   ;; extracts the :current-student-classroom property from the db
+   (reaction (:current-student-classroom @db))))  ;; pulls out :students
+
+(register-sub        ;; a new subscription handler
  :teachers             ;; usage (subscribe [:teachers])
  (fn [db]
    ;; extracts the teachers property from the db
@@ -29,6 +35,12 @@
  (fn [db]
    ;; extracts the incidents property from the db
    (reaction (:incidents @db))))  ;; pulls out :incidents
+
+(register-sub        ;; a new subscription handler
+ :classes             ;; usage (subscribe [:classes])
+ (fn [db]
+   ;; extracts the classes property from the db
+   (reaction (:classes @db))))  ;; pulls out :classes
 
 (register-sub        ;; a new subscription handler
  :classrooms             ;; usage (subscribe [:classrooms])

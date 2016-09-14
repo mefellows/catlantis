@@ -53,4 +53,6 @@
   (rf/dispatch-sync [:initialize-db])
   (init-nav)
   (rf/dispatch [:load-students])
+  (rf/dispatch [:load-classrooms])
+  (rf/dispatch [:load-teachers])
   (rf/dispatch [:load-incidents]))

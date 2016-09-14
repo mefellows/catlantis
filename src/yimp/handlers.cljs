@@ -39,6 +39,18 @@
 
 (def basic-mw [#_mid/debug mid/trim-v validate-schema-mw])
 
+(defn find-student-classroom "Finds a classroom in the given db by a students' id" [db id]
+  (let [classrooms (:classrooms db)
+    classroom (first
+               (->> classrooms
+                    (filter
+                      (fn [classroom]
+                        (some #{id} (:students classroom))))))]
+    (if-not (nil? classroom)
+      (let []
+        (assoc db :current-student-classroom classroom))
+      db)))
+
 (defn find-classroom "Finds a classroom in the given db by id" [db id]
   (let [classrooms (:classrooms db)
     classroom (first
@@ -49,8 +61,9 @@
     (if-not (nil? classroom)
       (let []
         (rf/dispatch [:nav/push :edit-classroom])
-        (assoc db :current-classroom classroom))
+        (assoc db :current-student-classroom classroom))
       nil)))
+
 
 (defn find-student "Finds a student in the given db by id" [db id]
   (let [students (:students db)
@@ -144,6 +157,16 @@
     (assoc db :students []))))
 
 (register-handler
+ :process-classrooms-res
+ (fn
+   ;; store the response of fetching the phones list in the phones attribute of the db
+   [db [_ response]]
+   (print response)
+   (if-not (nil? response)
+    (assoc db :classrooms response)
+    (assoc db :classrooms []))))
+
+(register-handler
   :load-students
   (s/fn [db _]
     (ajax.core/GET (str (:hostname env) "/students")
@@ -151,6 +174,28 @@
       :response-format :json
       :keywords? true
       :handler #(rf/dispatch [:process-students-res %1])
+      :error-handler #(rf/dispatch-sync [:bad-response %1])})
+   db)) ; <- DAH! Must return the state!!
+
+(register-handler
+  :load-teachers
+  (s/fn [db _]
+    (ajax.core/GET (str (:hostname env) "/teachers")
+     {
+      :response-format :json
+      :keywords? true
+      :handler #(rf/dispatch [:process-teachers-res %1])
+      :error-handler #(rf/dispatch-sync [:bad-response %1])})
+   db)) ; <- DAH! Must return the state!!
+
+(register-handler
+  :load-classrooms
+  (s/fn [db _]
+    (ajax.core/GET (str (:hostname env) "/classes")
+     {
+      :response-format :json
+      :keywords? true
+      :handler #(rf/dispatch [:process-classrooms-res %1])
       :error-handler #(rf/dispatch-sync [:bad-response %1])})
    db)) ; <- DAH! Must return the state!!
 
@@ -187,7 +232,9 @@
   :student-load
   basic-mw
   (s/fn [db [id]]
-    (find-student db id)))
+    (-> db
+      (find-student id)
+      (find-student-classroom id))))
 
 (register-handler
   :incident-res

@@ -29,18 +29,19 @@
   {:incident   (s/maybe s/Any)
    :loading? s/Bool})
 
-(def schema {:menu        [MenuOption]
-             :menu-selected (s/maybe MenuOption)
-             :incident-query   IncidentQuery
+(def schema {:menu              [MenuOption]
+             :menu-selected     (s/maybe MenuOption)
+             :incident-query    IncidentQuery
              :user              (s/maybe User)
              :students          [s/Any]
+             :teachers          [s/Any]
              :classrooms        [s/Any]
              :incidents         [s/Any]
              :current-incident  s/Any
              :current-student   s/Any ;TODO: fold this into current student!
              :current-student-incidents   s/Any
+             :current-student-classroom   s/Any
              :current-classroom s/Any
-             :teachers          [Teacher]
              :sync              s/Bool
              :current-page      s/Keyword})
 
@@ -52,11 +53,12 @@
                         :loading? false}
    :teachers           []
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
-   :classrooms         [{:id 1 :first_name "Matt" :last_name "foo"},{:id 2 :first_name "Matt" :last_name "foo"}]
+   :classrooms         []
+   :incidents          []
    :current-incident   nil
    :current-student    nil
    :current-student-incidents []
    :current-classroom    nil
-   :incidents          []
+   :current-student-classroom    nil
    :user               {:username "test"}
    :current-page       :incidents})

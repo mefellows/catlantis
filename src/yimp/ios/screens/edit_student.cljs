@@ -23,6 +23,7 @@
                  (let [{:keys [value]} (r/state this)
                        student (rf/subscribe [:current-student])
                        incidents (rf/subscribe [:current-student-incidents])
+                       classroom (rf/subscribe [:current-student-classroom])
                        loading (rf/subscribe [:sync])
                        date (new js/Date (:date_of_birth @student))]
                        [ui/scroll-view {:style (:first-item styles)}
@@ -41,7 +42,7 @@
                             [ui/text {:style (:readonly-label styles)}
                                "Classroom"]
                             [ui/text {:style (:readonly-value styles)}
-                               "5/6M"]]
+                               (:name @classroom)]]
                             [ui/text {:style (:readonly-section-title styles)}
                                "Incidents"]]
                             [incident-list @incidents @loading]])))})
