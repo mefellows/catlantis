@@ -1,5 +1,4 @@
 (ns yimp.ios.components.incident-list
-  (:require-macros [natal-shell.data-source :as ds])
   (:require [yimp.shared.ui :as ui]
             [yimp.shared.styles :refer [styles]]
             [yimp.utils :as u]
@@ -8,8 +7,8 @@
             [print.foo :as pf :include-macros true]
             [yimp.config :as cfg]
             [yimp.config :refer [app-name]]))
-
-(def list-view-ds (ds/data-source {:rowHasChanged #(not= %1 %2)}))
+              
+(def list-view-ds (ui/data-source {:rowHasChanged #(not= %1 %2)}))
 
 (defn submit [id]
   (print "selected: " id )
@@ -46,9 +45,11 @@
     ;:refresh-control refresh-control}
    }
 
-   [ui/list-view (merge
-                   {:dataSource    (ds/clone-with-rows list-view-ds incidents)
-                    :render-row    (comp r/as-element render-incident-row u/js->cljk)
-                    :style         (merge-with (:container styles) (:first-item styles))
-                    :render-footer (comp r/as-element (partial footer true))}
-                   {})]])
+  ;  [ui/list-view (merge
+  ;                  {:dataSource    (ui/clone-with-rows list-view-ds incidents)
+  ;                   :render-row    (comp r/as-element render-incident-row u/js->cljk)
+  ;                   :style         (merge-with (:container styles) (:first-item styles))
+  ;                   :render-footer (comp r/as-element (partial footer true))}
+  ;                  {})]
+                     
+                     ])

@@ -55,33 +55,59 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import "AppDelegate.h"
+// #import "AppDelegate.h"
+// 
+// #import "RCTBundleURLProvider.h"
+// #import "RCTRootView.h"
+// 
+// @implementation AppDelegate
+// 
+// - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+// {
+//   NSURL *jsCodeLocation;
+//   NSURL *fallbackJS;
+// 
+//   fallbackJS = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+//   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:fallbackJS];
+// 
+//   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+//                                                       moduleName:@"yimp"
+//                                                initialProperties:nil
+//                                                    launchOptions:launchOptions];
+//   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+// 
+//   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//   UIViewController *rootViewController = [UIViewController new];
+//   rootViewController.view = rootView;
+//   self.window.rootViewController = rootViewController;
+//   [self.window makeKeyAndVisible];
+//   return YES;
+// }
+// 
+// @end
 
-#import "RCTBundleURLProvider.h"
-#import "RCTRootView.h"
-
-@implementation AppDelegate
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-  NSURL *jsCodeLocation;
-  NSURL *fallbackJS;
-
-  fallbackJS = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:fallbackJS];
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"yimp"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
-  rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
-  return YES;
-}
-
-@end
+  #import "AppDelegate.h"
+  #import "RCCManager.h" // RCC stands for ReaCtControllers
+  
+  @implementation AppDelegate
+  
+  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+  {
+    NSURL *jsCodeLocation;
+  
+    // OPTION 1 - load JS code from development server
+    jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+  
+    // OPTION 2 - load JS from pre-bundled file on disk
+    // jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  
+    // this is your new React Native invocation
+    self.window.backgroundColor = [UIColor whiteColor];
+    [[RCCManager sharedInstance] initBridgeWithBundleURL:jsCodeLocation launchOptions:launchOptions];
+  
+    return YES;
+  }
+  
+  @end

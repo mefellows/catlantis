@@ -5,7 +5,7 @@
             [yimp.utils :as u]
             [schema.core :as s :include-macros true]
             [camel-snake-kebab.core :as cs :include-macros true]))
-
+(js/console.log "navigating first...")
 (def Navigation (aget (js/require "react-native-navigation") "Navigation"))
 
 (def empty-render-state

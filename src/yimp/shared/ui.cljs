@@ -28,7 +28,9 @@
 (def dismiss-keyboard (js/require "dismissKeyboard"))
 (def keyboard-avoiding-view (r/adapt-react-class (.-KeyboardAvoidingView ReactNative)))
 (def EStyleSheet (aget (js/require "react-native-extended-stylesheet") "default"))
-
+(defn data-source [config] (ReactNative.ListView.DataSource. (cljs.core/clj->js config)))
+(defn clone-with-rows [ds rows] (.cloneWithRows ~ds (cljs.core/clj->js rows)))
+  
 (defn get-window
   ([] (get-window identity))
   ([f]
