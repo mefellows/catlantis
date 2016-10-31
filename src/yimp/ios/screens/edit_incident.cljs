@@ -24,7 +24,8 @@
             (assoc :start_time (.toISOString (new js/Date start_time)))
             (assoc :end_time (.toISOString (new js/Date end_time))))]
             (js/console.log "converted incident object to: " (clj->js updated))
-      (rf/dispatch [:save-incident updated]))))
+      (rf/dispatch [:save-incident updated])
+      (rf/dispatch [:nav/push :incidents]))))
 
 (def t (js/require "tcomb-form-native"))
 (def Form (r/adapt-react-class (.-Form t.form)))
