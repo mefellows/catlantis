@@ -65,7 +65,7 @@
 
  (def options
    {:stylesheet form-style
-    :order [:start_time :end_time :summary :location :description :students  :action_taken :follow_up ]
+    :order [:summary :location :description :students  :action_taken :follow_up :start_time :end_time]
     :fields {:id {:hidden true}
              :students {:item {:label " "
                                :order "asc"}}
