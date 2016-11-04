@@ -103,6 +103,19 @@
         (assoc db :current-incident incident))
       nil)))
 
+(defn find-preference "Finds an preference in the given db by id" [db id]
+  (let [preferences (:preferences db)
+    preference (first
+               (->> preferences
+                    (filter
+                      (fn [preference]
+                        (= (:id preference) id)))))]
+    (if-not (nil? preference)
+      (let []
+        (rf/dispatch [:nav/push :edit-preference])
+        (assoc db :current-preference preference))
+      nil)))
+
 (defn update-incident "Finds and updates an incident in the db (uses local-id)" [db incident]
   (let [incidents (:incidents db)]
     (->>
@@ -227,6 +240,13 @@
   (s/fn [db [id]]
     (find-incident db id)))
 
+; Fetch a single preference from the local database (does not make API call)
+(register-handler
+  :preference-load
+  basic-mw
+  (s/fn [db [id]]
+    (find-preference db id)))
+
 ; Fetch a single student from the local database (does not make API call)
 (register-handler
   :student-load
@@ -251,6 +271,12 @@
   (s/fn [db [user]]
     (assoc db :user user)))
 
+(defn sync-config []
+  (rf/dispatch [:load-students])
+  (rf/dispatch [:load-classrooms])
+  (rf/dispatch [:load-teachers])
+  (rf/dispatch [:load-preferences]))
+
 (register-handler
   :sync-complete
   basic-mw
@@ -260,9 +286,8 @@
       ; update all incidents -> no longer dirty!
       (merge (:incidents db) (->> records
         (map (fn [i]
-          (assoc i :synchronised true)))))
-      (rf/dispatch [:load-students])
-      (rf/dispatch [:load-incidents]))
+          (sync-config)
+          (assoc i :synchronised true))))))
     (assoc db :sync false)))
 
 (register-handler
@@ -273,6 +298,7 @@
     (ui/alert (str "Synchronise failed: " res))
     (assoc db :sync false)))
 
+
 (defn sync-records [records]
   (js/console.log "sync records: " (clj->js records))
   (ajax.core/POST (str (:hostname env) "/sync")
@@ -281,8 +307,29 @@
     :response-format (ajax.core/json-response-format {:keywords? true})
     :params (clj->js records)
     :handler #(rf/dispatch [:sync-complete %1 records])
-    :error-handler #(rf/dispatch-sync [:sync-fail %1])})
-)
+    :error-handler #(rf/dispatch-sync [:sync-fail %1])}))
+
+(defn save-preference [preference]
+  (js/console.log "saving preference: " (clj->js preference)))
+  ; (ajax.core/POST (str (:hostname env) "/sync")
+  ;  {
+  ;   :format (ajax.core/json-request-format)
+  ;   :response-format (ajax.core/json-response-format {:keywords? true})
+  ;   :params (clj->js records)
+  ;   :handler #((rf/dispatch [:sync-complete %1 records])
+  ;              (sync-config))
+  ;   :error-handler #(rf/dispatch-sync [:sync-fail %1])}))
+
+; New Handlers
+(register-handler
+  :save-preference
+  basic-mw
+  (s/fn [db [preference]]
+    (ui/alert "saving preference!...")
+    (save-preference preference)
+    (assoc db :current-preference preference)))
+    ; (let [preference (:current-preference db)]
+    ;   (save-preference @preference))))
 
 ; New Handlers
 (register-handler
@@ -302,13 +349,21 @@
     (print "error: " body)
     db))
 
-  (register-handler
-   :process-incidents-res
-   (fn
-     ;; store the response of fetching the phones list in the phones attribute of the db
-     [db [_ response]]
-     (print response)
-     (assoc db :incidents response)))
+(register-handler
+ :process-incidents-res
+ (fn
+   ;; store the response of fetching the phones list in the phones attribute of the db
+   [db [_ response]]
+   (print response)
+   (assoc db :incidents response)))
+
+(register-handler
+ :process-preferences-res
+ (fn
+   ;; store the response of fetching the phones list in the phones attribute of the db
+   [db [_ response]]
+   (print response)
+   (assoc db :preferences response)))
 
 (register-handler
   :load-incidents
@@ -321,11 +376,28 @@
       :error-handler #(rf/dispatch-sync [:bad-response %1])})
    db)) ; <- DAH! Must return the state!!
 
+(register-handler
+  :load-preferences
+  (s/fn [db _]
+    (ajax.core/GET (str (:hostname env) "/school/" (:school-id env) "/preferences")
+     {
+      :response-format :json
+      :keywords? true
+      :handler #(rf/dispatch [:process-preferences-res %1])
+      :error-handler #(rf/dispatch-sync [:bad-response %1])})
+   db)) ; <- DAH! Must return the state!!
+
  (register-handler
    :create-incident
    (s/fn [db [_]]
       (rf/dispatch [:nav/push :edit-incident])
       (assoc db :current-incident {})))
+
+ (register-handler
+   :create-preference
+   (s/fn [db [_]]
+      (rf/dispatch [:nav/push :edit-preference])
+      (assoc db :current-preference {})))
 
 (defn get-incident-by-local-id "Finds an incident in the db by its local-id" [db local-id]
   (let [incidents (:incidents db)]

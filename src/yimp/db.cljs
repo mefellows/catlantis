@@ -29,21 +29,27 @@
   {:incident   (s/maybe s/Any)
    :loading? s/Bool})
 
-(def schema {:menu              [MenuOption]
-             :menu-selected     (s/maybe MenuOption)
-             :incident-query    IncidentQuery
-             :user              (s/maybe User)
-             :students          [s/Any]
-             :teachers          [s/Any]
-             :classrooms        [s/Any]
-             :incidents         [s/Any]
-             :current-incident  s/Any
-             :current-student   s/Any ;TODO: fold this into current student!
+(def schema {:menu               [MenuOption]
+             :menu-selected      (s/maybe MenuOption)
+             :incident-query     IncidentQuery
+             :user               (s/maybe User)
+             :students           [s/Any]
+             :teachers           [s/Any]
+             :classrooms         [s/Any]
+             :incidents          [s/Any]
+             :contacts           [s/Any]
+             :locations          [s/Any]
+             :actions            [s/Any]
+             :summary            [s/Any]
+             :preferences        [s/Any]
+             :current-incident   s/Any
+             :current-student    s/Any
+             :current-preference s/Any
              :current-student-incidents   s/Any
              :current-student-classroom   s/Any
-             :current-classroom s/Any
-             :sync              s/Bool
-             :current-page      s/Keyword})
+             :current-classroom  s/Any
+             :sync               s/Bool
+             :current-page       s/Keyword})
 
 (def app-db
   {:menu               [{:id nil :name "All Categories"}]
@@ -55,7 +61,13 @@
    :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
    :classrooms         []
    :incidents          []
+   :contacts           []
+   :locations          []
+   :actions            []
+   :summary            []
+   :preferences        []
    :current-incident   nil
+   :current-preference nil
    :current-student    nil
    :current-student-incidents []
    :current-classroom    nil

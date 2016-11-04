@@ -17,7 +17,8 @@
 (def menu-options
   [{:id "incidents" :name "Incidents"}
   ;  {:id "classrooms" :name "Classrooms"}
-   {:id "students" :name "Students"}])
+   {:id "students" :name "Students"}
+   {:id "preferences" :name "Preferences"}])
 
 (defn menu []
   (let [catgs menu-options

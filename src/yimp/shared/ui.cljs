@@ -25,7 +25,6 @@
 (def text-input (r/adapt-react-class (.-TextInput js/React)))
 (def list-item (r/adapt-react-class (js/require "react-native-listitem")))
 (def button (r/adapt-react-class (js/require "apsl-react-native-button")))
-(def LinkingIOS (.-LinkingIOS js/React))
 (def dismiss-keyboard (js/require "dismissKeyboard"))
 (def EStyleSheet (aget (js/require "react-native-extended-stylesheet") "default"))
 
@@ -46,9 +45,6 @@
       u/obj->hash-map))
 
 (build-stylesheet)
-
-(defn open-url [url]
-  (.openURL LinkingIOS url))
 
 (defn alert [title]
   (.alert (.-Alert js/React) title))
@@ -83,21 +79,25 @@
       :menu (rf/dispatch [:nav/toggle-drawer])
       :sync (rf/dispatch [:synchronise])
       :create-incident (rf/dispatch [:create-incident])
+      :create-preference (rf/dispatch [:create-preference])
       :user (rf/dispatch [:nav/push id {:screen-type :modal}])
       (rf/dispatch [:nav/push id]))))
 
-(defn navigator [screen title]
+(defn navigator [screen title buttons]
   {:screen            screen
    :screen-type       :screen
    :title             title
-   :navigator-buttons navigator-buttons})
+   :navigator-buttons buttons})
 
-(defn create-screen [screen title render-fn]
-  {:component
-   (r/create-class
-     {:reagent-render
-      render-fn})
-   :config
-   (navigator screen title)
-   :on-navigator-event-fn
-   navigator-events})
+(defn create-screen
+  ([screen title render-fn]
+   (create-screen screen title render-fn navigator-buttons))
+  ([screen title render-fn buttons]
+    {:component
+     (r/create-class
+       {:reagent-render
+        render-fn})
+     :config
+     (navigator screen title buttons)
+     :on-navigator-event-fn
+     navigator-events}))

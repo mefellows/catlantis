@@ -13,6 +13,12 @@
    (reaction (:students @db))))  ;; pulls out :students
 
 (register-sub        ;; a new subscription handler
+ :preferences             ;; usage (subscribe [:preferences])
+ (fn [db]
+   ;; extracts the preferences property from the db
+   (reaction (:preferences @db))))  ;; pulls out :preferences
+
+(register-sub        ;; a new subscription handler
  :current-student-incidents             ;; usage (subscribe [::current-student-incidents])
  (fn [db]
    ;; extracts the :current-student-incidents property from the db
@@ -90,6 +96,12 @@
   (fn [db _]
     (reaction
       (:current-incident @db))))
+
+(register-sub
+  :current-preference
+  (fn [db _]
+    (reaction
+      (:current-preference @db))))
 
 (register-sub
   :current-student

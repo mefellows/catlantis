@@ -11,11 +11,13 @@
             [yimp.ios.screens.classrooms :refer [classrooms]]
             [yimp.ios.screens.students :refer [students]]
             [yimp.ios.screens.incidents :refer [incidents]]
+            [yimp.ios.screens.preferences :refer [preferences]]
             [yimp.ios.screens.detail :refer [detail]]
             [yimp.ios.screens.menu :refer [menu]]
             [yimp.ios.screens.edit-incident :refer [edit-incident]]
             [yimp.ios.screens.edit-student :refer [edit-student]]
             [yimp.ios.screens.edit-classroom :refer [edit-classroom]]
+            [yimp.ios.screens.edit-preference :refer [edit-preference]]
             [yimp.ios.screens.user :refer [user]]
             [yimp.shared.ui :as ui]))
 
@@ -31,10 +33,12 @@
     (nav/register-screen! students)
     (nav/register-screen! incidents)
     (nav/register-screen! classrooms)
+    (nav/register-screen! preferences)
     (nav/register-screen! detail)
     (nav/register-screen! edit-incident)
     (nav/register-screen! edit-student)
     (nav/register-screen! edit-classroom)
+    (nav/register-screen! edit-preference)
     (nav/register-screen! user)
     (nav/register-reagent-component! :menu menu)
     (nav/start-single-screen-app!
@@ -55,4 +59,5 @@
   (rf/dispatch [:load-students])
   (rf/dispatch [:load-classrooms])
   (rf/dispatch [:load-teachers])
+  (rf/dispatch [:load-preferences])
   (rf/dispatch [:load-incidents]))
