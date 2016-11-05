@@ -4,6 +4,7 @@
             [clojure.walk :refer [keywordize-keys]]
             [yimp.shared.styles :refer [styles]]
             [clojure.string :as str]
+            [yimp.ios.screens.preferences :refer [filtered-preferences]]
             [yimp.shared.ui :as ui]))
 
 (defn valid-form? [props]
@@ -50,8 +51,20 @@
                     (aset "height" 150))]
         stylesheet))
 
+(def options
+  {:stylesheet form-style
+    :order [:summary :location :description :action_taken :students :follow_up :start_time :end_time]
+    :fields {:id {:hidden true}
+    :students {:item {:label " "
+    :order "asc"}}
+    :description {:stylesheet text-area-style
+      :multiline true}}})
+
 (defn extract-student-enum [student]
   (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
+
+(defn extract-preference-enum [preference]
+  (let [] {(:value preference) (str (:value preference))}))
 
 (defn Student []
   (let [students (rf/subscribe [:students])]
@@ -63,24 +76,31 @@
          (clj->js)
          (t.enums))))
 
- (def options
-   {:stylesheet form-style
-    :order [:summary :location :description :action_taken :students :follow_up :start_time :end_time]
-    :fields {:id {:hidden true}
-             :students {:item {:label " "
-                               :order "asc"}}
-             :description {:stylesheet text-area-style
-                           :multiline true}}})
-
-(defn incident [new?]
-  (let [obj {:start_time t.Date
+ (defn Preference [type current-value]
+   (let [preferences (rf/subscribe [:preferences])
+         val (if-not (nil? current-value)
+              current-value
+              "")]
+    (print "Loading preferences..." val)
+     (->> (filtered-preferences @preferences type)
+          (mapv extract-preference-enum)
+          (flatten)
+          (cons {(str val) (str val)})
+          (into {})
+          (clj->js)
+          (t.enums))))
+          
+(defn incident [val]
+  (let [new? (nil? (:id val))
+        incident (rf/subscribe [:current-incident])
+        obj {:start_time t.Date
              :end_time t.Date
-             :summary t.String
+             :summary (Preference "summary" (:summary @incident))
              :students (t.list (Student))
              :description (t.maybe t.String)
-             :location t.String
+             :location (Preference "location" (:location @incident))
              :follow_up (t.maybe t.Boolean)
-             :action_taken (t.maybe t.String)}]
+             :action_taken (Preference "action" (:action_taken @incident))}]
     (if-not new?
       (t.struct (clj->js (assoc obj :id t.Number)))
       (t.struct (clj->js obj)))))
@@ -101,8 +121,8 @@
           updated (-> @incident
               (assoc :students (into [] (map #(:id %1) students)))
               (assoc :local_id (if (and (nil? id) (nil? local_id))
-                                    (.now js/Date)
-                                    (if-not (nil? local_id) local_id id)))
+                                   (.now js/Date)
+                                   (if-not (nil? local_id) local_id id)))
               (assoc :start_time (js->clj (if (nil? start_time) (new js/Date) (new js/Date start_time))))
               (assoc :end_time (js->clj (if (nil? end_time) (new js/Date) (new js/Date end_time)))))]
           (r/set-state this {:value updated})))
@@ -116,7 +136,7 @@
                      [ui/scroll-view
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
-                             :type (incident (nil? (:id value)))
+                             :type (incident value)
                              :value value
                              :options options
                              :on-change #(r/set-state this {:value (js->clj %1)})}]

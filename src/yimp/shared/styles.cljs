@@ -22,8 +22,7 @@
     :readonly-section-title {:color (ui/color :orange800)
                              :font-weight "500"
                              :padding-left 20
-                            ;  :height "10%"
-                             :padding-top 20
+                             :padding-top 40
                              :padding-bottom 10
                              :flex 1
                      }

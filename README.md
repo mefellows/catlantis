@@ -44,7 +44,8 @@ Copy image to `./images`. Be sure to add 2x and 3x versions (note the `@2x.png` 
 ### TestFlight
 
 1. Update `config.cljs` and make sure app pointing to Heroku host.
-2. Run fastlane:
+1. run `lein prod-build`
+1. Run fastlane:
 
 ```
 fastlane beta

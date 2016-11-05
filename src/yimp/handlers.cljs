@@ -271,8 +271,12 @@
   (s/fn [db [user]]
     (assoc db :user user)))
 
+; Sync all lookup lists. These are not managed as carefully as incidents
+; so all they do is replace what is currently in storage.
 (defn sync-config []
+  (js/console.log "sync config")
   (rf/dispatch [:load-students])
+  (rf/dispatch [:load-incidents])
   (rf/dispatch [:load-classrooms])
   (rf/dispatch [:load-teachers])
   (rf/dispatch [:load-preferences]))
@@ -282,11 +286,11 @@
   basic-mw
   (s/fn [db [res records]]
     (print res)
+    (sync-config)
     (when-not (nil? res)
       ; update all incidents -> no longer dirty!
       (merge (:incidents db) (->> records
         (map (fn [i]
-          (sync-config)
           (assoc i :synchronised true))))))
     (assoc db :sync false)))
 
@@ -297,7 +301,6 @@
     (print res)
     (ui/alert (str "Synchronise failed: " res))
     (assoc db :sync false)))
-
 
 (defn sync-records [records]
   (js/console.log "sync records: " (clj->js records))
@@ -310,26 +313,25 @@
     :error-handler #(rf/dispatch-sync [:sync-fail %1])}))
 
 (defn save-preference [preference]
-  (js/console.log "saving preference: " (clj->js preference)))
-  ; (ajax.core/POST (str (:hostname env) "/sync")
-  ;  {
-  ;   :format (ajax.core/json-request-format)
-  ;   :response-format (ajax.core/json-response-format {:keywords? true})
-  ;   :params (clj->js records)
-  ;   :handler #((rf/dispatch [:sync-complete %1 records])
-  ;              (sync-config))
-  ;   :error-handler #(rf/dispatch-sync [:sync-fail %1])}))
+  (js/console.log "saving preference: " (clj->js preference))
+  (let [method (if (nil? (:id preference))
+                          ajax.core/POST
+                          ajax.core/PUT)]
+                          (method (str (:hostname env) "/preferences")
+                          {
+                            :format (ajax.core/json-request-format)
+                            :response-format (ajax.core/json-response-format {:keywords? true})
+                            :params (clj->js (assoc preference :school_id (:school-id env)))
+                            :handler #(js/alert "Saved!")
+                            :error-handler #(js/alert "Error saving!")})))
 
 ; New Handlers
 (register-handler
   :save-preference
   basic-mw
   (s/fn [db [preference]]
-    (ui/alert "saving preference!...")
     (save-preference preference)
     (assoc db :current-preference preference)))
-    ; (let [preference (:current-preference db)]
-    ;   (save-preference @preference))))
 
 ; New Handlers
 (register-handler
@@ -352,7 +354,6 @@
 (register-handler
  :process-incidents-res
  (fn
-   ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
    (print response)
    (assoc db :incidents response)))
@@ -360,7 +361,6 @@
 (register-handler
  :process-preferences-res
  (fn
-   ;; store the response of fetching the phones list in the phones attribute of the db
    [db [_ response]]
    (print response)
    (assoc db :preferences response)))

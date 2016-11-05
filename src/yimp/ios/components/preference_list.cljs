@@ -4,7 +4,7 @@
             [yimp.shared.styles :refer [styles]]
             [yimp.utils :as u]
             [re-frame.core :as rf]
-            [reagent.core :as r]
+            [reagent.core :as r]            
             [print.foo :as pf :include-macros true]
             [yimp.config :as cfg]
             [yimp.config :refer [app-name]]))
@@ -22,7 +22,7 @@
     [ui/view {:style       (:listview-row styles)}
       [ui/view {:style (:listview-rowcontent styles)}
           [ui/text {}
-            (str type " " value)]]
+            (str value)]]
       [ui/view {:style (:listview-rowaction styles)}
         [ui/text {} " > "]]]])
 
@@ -36,23 +36,11 @@
 (defn preference-list [preferences loading?]
   (if (not-empty preferences)
     (let []
-      [ui/scroll-view
-       {:style (:listview-row styles)}
-      ;  [ui/button {
-      ;             ; :on-press    #(on-submit this (r/state this))
-      ;             :on-press    #(js/console.log "press")
-      ;              :style       (:submit-btn styles)
-      ;              :text-style  (:submit-btn-text styles)
-      ;             ;  :is-disabled #(not (valid-form? props))
-      ;              :is-disabled #(false)
-      ;            }
-      ;   "Create Preference"]
        [ui/list-view (merge
                        {:dataSource    (ds/clone-with-rows list-view-ds preferences)
                         :render-row    (comp r/as-element render-preference-row u/js->cljk)
-                        :style         (merge-with (:container styles) (:first-item styles))
                         :render-footer (comp r/as-element (partial footer loading?))}
-                       {})]])
+                       {})])
    [ui/scroll-view
     {:style (:container styles)}
     [ui/view
