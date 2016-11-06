@@ -6,6 +6,24 @@
             [re-frame.core :as rf]
             [print.foo :as pf :include-macros true]))
 
+(register-sub
+  :get-android-drawer
+  (fn [db _]
+    (reaction
+      (get-in @db [:android :drawer]))))
+
+(register-sub
+  :get-shared-tab
+  (fn [db _]
+    (reaction
+      (get-in @db [:shared :tab]))))
+
+(register-sub
+  :get-data
+  (fn [db _]
+    (reaction
+      (get @db :data))))
+                
 (register-sub        ;; a new subscription handler
  :students             ;; usage (subscribe [:students])
  (fn [db]

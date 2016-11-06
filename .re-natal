@@ -16,7 +16,12 @@
     "apsl-react-native-button",
     "dismissKeyboard",
     "tcomb-form-native",
-    "lodash"
+    "lodash",
+    "react-native-button/Button",
+    "react-native-material-design",
+    "react-native-dialogs",
+    "react-native-button",
+    "react-native-store"    
   ],
   "imageDirs": [
     "images"
