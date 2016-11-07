@@ -8,15 +8,15 @@
             [yimp.android.styles :as s]
             [yimp.android.scenes.root :refer [root-scene]]))
 
-(defn app-root []
-  [android-ui/navigator {:initial-route   {:name "main" :index 1}
-                         :style           (get-in s/styles [:app])
-                         :configure-scene (fn [_ _]
-                                            js/React.Navigator.SceneConfigs.FloatFromBottomAndroid)
-                         :render-scene    (fn [_ navigator]
-                                            (r/as-element [root-scene {:navigator navigator}]))}])
+; (defn app-root []
+;   [android-ui/navigator {:initial-route   {:name "main" :index 1}
+;                          :style           (get-in s/styles [:app])
+;                          :configure-scene (fn [_ _]
+;                                             js/React.Navigator.SceneConfigs.FloatFromBottomAndroid)
+;                          :render-scene    (fn [_ navigator]
+;                                             (r/as-element [root-scene {:navigator navigator}]))}])
 
 (defn init []
   (dispatch-sync [:initialize-schema])
   (dispatch [:load-from-db :city])
-  (.registerComponent ui/app-registry "yimp" #(r/reactify-component app-root)))
+  (.registerComponent ui/app-registry "yimp" #(r/reactify-component root-scene)))

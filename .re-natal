@@ -1,7 +1,7 @@
 {
   "name": "yimp",
   "interface": "reagent",
-  "androidHost": "10.0.3.2",
+  "androidHost": "10.0.2.2",
   "iosHost": "localhost",
   "envRoots": {
     "dev": "env/dev",
@@ -21,7 +21,7 @@
     "react-native-material-design",
     "react-native-dialogs",
     "react-native-button",
-    "react-native-store"    
+    "react-native-store"
   ],
   "imageDirs": [
     "images"

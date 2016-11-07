@@ -22,8 +22,22 @@
                            :negativeText "No"
                            :onPositive   (fn []
                                            (dispatch [:delete-city name]))}))
+(def my-scene
+ [ui/view {}
+   [ui/text {} "Hello 2"]])
 
-(defn root-scene [{navigator :navigator}]
+(defn navigator []
+  [android-ui/navigator {:initial-route   {:name "main" :index 1}
+                        :style           (get-in s/styles [:app])
+                        :configure-scene (fn [_ _]
+                                           js/React.Navigator.SceneConfigs.FloatFromBottomAndroid)
+                        :render-scene    (fn [_ navigator]
+                                          (r/as-element my-scene))}])
+
+(defn root-scene []
+  (navigator))
+
+(defn root-scene2 [{navigator :navigator}]
   (let [drawer (subscribe [:get-android-drawer])
         tab    (subscribe [:get-shared-tab])]
     [android-ui/drawer-layout {:drawer-width           300
