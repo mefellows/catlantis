@@ -42,7 +42,7 @@
     (nav/register-screen! user)
     (nav/register-reagent-component! :menu menu)
     (nav/start-single-screen-app!
-      {:screen          (if (not= username "") @page :user)
+      {:screen          (if-not (nil? @u) @page :user)
        :drawer          {:left                 {:screen :menu}
                          :disable-open-gesture true}
        :persist-state?  true

@@ -266,15 +266,22 @@
           (assoc-in [:incident-query :loading?] false)))))
 
 (register-handler
-  :user-change
+  :login
   basic-mw
   (s/fn [db [user]]
-    (assoc db :user user)))
+    (let [password (:password user)]
+      (if (= password "l3tm31n")
+        (let []
+          (rf/dispatch [:nav/push :incidents])
+          (assoc db :user user))
+        (let []
+          (js/alert "Invalid password :(")
+          db)
+          ))))
 
 ; Sync all lookup lists. These are not managed as carefully as incidents
 ; so all they do is replace what is currently in storage.
 (defn sync-config []
-  (js/console.log "sync config")
   (rf/dispatch [:load-students])
   (rf/dispatch [:load-incidents])
   (rf/dispatch [:load-classrooms])

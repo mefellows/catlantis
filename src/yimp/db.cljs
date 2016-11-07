@@ -9,10 +9,12 @@
 (s/defschema Teacher {:id   (s/maybe s/Str)
                       :name s/Str})
 
+; User database definition
+(s/defschema User {:username s/Str
+                   :password (s/maybe s/Str)})
+
 ; Student database definition
 (s/defschema Student s/Any)
-; (s/defschema Student {:id   (s/maybe s/Str)
-;                       :name s/Str})
 
 (def o s/optional-key)
 
@@ -22,8 +24,6 @@
                     (o :sub-id)     s/Str
                     (o :created)    s/Str
                     (o :favorite?)  s/Bool})
-
-(s/defschema User {:username s/Str})
 
 (s/defschema IncidentQuery
   {:incident   (s/maybe s/Any)
@@ -48,6 +48,7 @@
              :current-student-incidents   s/Any
              :current-student-classroom   s/Any
              :current-classroom  s/Any
+             :authenticated      s/Bool
              :sync               s/Bool
              :current-page       s/Keyword})
 
@@ -58,7 +59,7 @@
    :incident-query     {:incident nil
                         :loading? false}
    :teachers           []
-   :students           [{:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Matt"}, {:ID "test" :FirstName "Foo"}]
+   :students           []
    :classrooms         []
    :incidents          []
    :contacts           []
@@ -70,7 +71,8 @@
    :current-preference nil
    :current-student    nil
    :current-student-incidents []
-   :current-classroom    nil
+   :current-classroom  nil
+   :authenticated      false
    :current-student-classroom    nil
-   :user               {:username "test"}
+   :user               nil
    :current-page       :incidents})

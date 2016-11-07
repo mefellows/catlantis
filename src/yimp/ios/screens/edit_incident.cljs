@@ -56,9 +56,9 @@
     :order [:summary :location :description :action_taken :students :follow_up :start_time :end_time]
     :fields {:id {:hidden true}
     :students {:item {:label " "
-    :order "asc"}}
+                      :order "asc"}}
     :description {:stylesheet text-area-style
-      :multiline true}}})
+                  :multiline true}}})
 
 (defn extract-student-enum [student]
   (let [] {(:id student) (str (:first_name student) " " (:last_name student))}))
@@ -81,7 +81,6 @@
          val (if-not (nil? current-value)
               current-value
               "")]
-    (print "Loading preferences..." val)
      (->> (filtered-preferences @preferences type)
           (mapv extract-preference-enum)
           (flatten)
