@@ -55,9 +55,9 @@
 
 (defn init []
   (rf/dispatch-sync [:initialize-db])
+  (rf/dispatch-sync [:load-teachers]) ;needed for login
   (init-nav)
   (rf/dispatch [:load-students])
   (rf/dispatch [:load-classrooms])
-  (rf/dispatch [:load-teachers])
   (rf/dispatch [:load-preferences])
   (rf/dispatch [:load-incidents]))
