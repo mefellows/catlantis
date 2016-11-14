@@ -270,7 +270,7 @@
   basic-mw
   (s/fn [db [user]]
     (let [password (:password user)]
-      (if (= password "l3tm31n")
+      (if (= password "gullynorth")
         (let []
           (rf/dispatch [:nav/push :incidents])
           (assoc db :user user))
