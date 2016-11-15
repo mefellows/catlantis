@@ -97,7 +97,7 @@
                         :padding 20}
      :footer-container {:flex 2}
      :text         {:color "white" :text-align "center" :font-weight "bold"}
-     :first-item   {:margin-top 60}
+     :first-item   {:margin-top 0}
      :image-detail {:flex       1
                     :height     "60%"
                     :width      "100%"
@@ -126,8 +126,7 @@
      :bg-img       {:flex   1
                     :width  "100%"
                     :height "100%"}
-     :form-container {:margin-top 50
-                      :flex 1
+     :form-container {:flex 1
                       :justify-content :center}
      :login-container {:background-color :transparent
                        :flex             1

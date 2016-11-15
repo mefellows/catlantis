@@ -47,7 +47,8 @@
                          :disable-open-gesture true}
        :persist-state?  true
        :animationType   :fade
-       :navigator-style {:nav-bar-blur         true
+       :navigator-style {
+                          ;:nav-bar-blur         true
                          :draw-under-nav-bar   true
                          :nav-bar-button-color nav-content-color
                         ;  :nav-bar-background-color "#efefef"
