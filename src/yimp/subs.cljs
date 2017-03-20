@@ -13,6 +13,12 @@
    (reaction (:students @db))))  ;; pulls out :students
 
 (register-sub        ;; a new subscription handler
+ :login             ;; usage (subscribe [:login])
+ (fn [db]
+   ;; extracts the login property from the db
+   (reaction (:login @db))))  ;; pulls out :login
+
+(register-sub        ;; a new subscription handler
  :preferences             ;; usage (subscribe [:preferences])
  (fn [db]
    ;; extracts the preferences property from the db

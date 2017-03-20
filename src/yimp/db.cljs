@@ -1,4 +1,4 @@
-(ns yimp.db
+  (ns yimp.db
   (:require [schema.core :as s :include-macros true]))
 
 
@@ -11,6 +11,7 @@
 
 ; User database definition
 (s/defschema User {:username s/Str
+                   :id s/Int
                    :password (s/maybe s/Str)})
 
 ; Student database definition

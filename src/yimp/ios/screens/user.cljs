@@ -18,11 +18,12 @@
     (aget "form")))]
     (empty? (js->clj (aget validation-result "errors")))))
 
+; TODO: make sure the user ID is captured, this should be sent through laterz
 (defn on-submit [props user]
   (when (valid-form? props)
     (let [value (keywordize-keys (:value user))]
       (rf/dispatch [:login value]))))
-    
+
 
 ; See https://github.com/gcanti/tcomb-form-native/blob/master/lib/stylesheets/bootstrap.js
 ; for more you can modify.
@@ -75,7 +76,7 @@
                       {:style (:scroll-container styles)}
                       [Form {:ref "form"
                              :type (User)
-                             :value value                             
+                             :value value
                              :options options
                              :on-change #(r/set-state this {:value (js->clj %1)})}]
                       [ui/button {
@@ -143,7 +144,7 @@
 ;                            :text-style  (:submit-btn-text styles)
 ;                            :is-disabled (invalid-username? username)}
 ;                 "Submit"]]]])))})
-;                
+;
 ;    :config
 ;    {:screen          :user
 ;     :screen-type     :screen
